@@ -1,9 +1,14 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Body, HTTPException, Query, Request
 from typing import Optional
 from pydantic import BaseModel
 from backend.db.database import get_db
 
 router = APIRouter()
+
+
+class BulkUpdateItem(BaseModel):
+    id: int
+    category: str
 
 
 @router.get("/transactions")
@@ -59,6 +64,26 @@ async def list_transactions(
         await db.close()
 
 
+@router.put("/transactions/bulk-update")
+async def bulk_update_transactions(request: Request):
+    """Bulk update transaction categories."""
+    updates = await request.json()
+    db = await get_db()
+    try:
+        for update in updates:
+            tx_id = update.get("id")
+            category = update.get("category")
+            if tx_id and category:
+                await db.execute(
+                    "UPDATE transactions SET category = ?, category_confirmed = 1 WHERE id = ?",
+                    (category, tx_id),
+                )
+        await db.commit()
+        return {"status": "updated", "count": len(updates)}
+    finally:
+        await db.close()
+
+
 @router.put("/transactions/{tx_id}")
 async def update_transaction(tx_id: int, category: Optional[str] = None, category_confirmed: Optional[bool] = None):
     """Update a transaction's category."""
@@ -94,25 +119,6 @@ async def update_transaction(tx_id: int, category: Optional[str] = None, categor
 
         await db.commit()
         return {"status": "updated"}
-    finally:
-        await db.close()
-
-
-@router.put("/transactions/bulk-update")
-async def bulk_update_transactions(updates: list[dict]):
-    """Bulk update transaction categories."""
-    db = await get_db()
-    try:
-        for update in updates:
-            tx_id = update.get("id")
-            category = update.get("category")
-            if tx_id and category:
-                await db.execute(
-                    "UPDATE transactions SET category = ?, category_confirmed = 1 WHERE id = ?",
-                    (category, tx_id),
-                )
-        await db.commit()
-        return {"status": "updated", "count": len(updates)}
     finally:
         await db.close()
 
