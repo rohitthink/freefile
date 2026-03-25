@@ -1,0 +1,20 @@
+venv/
+data/
+__pycache__/
+*.pyc
+.next/
+node_modules/
+.env
+*.db
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Tauri
+src-tauri/target/
+src-tauri/binaries/freefile-backend-*
+
+# OS
+.DS_Store
