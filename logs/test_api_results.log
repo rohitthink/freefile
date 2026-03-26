@@ -1,0 +1,86 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.3, pytest-9.0.2, pluggy-1.6.0 -- /Volumes/HomeX/rohitthink/Projects/IT/freefile/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Volumes/HomeX/rohitthink/Projects/IT/freefile
+plugins: asyncio-1.3.0, anyio-4.13.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 49 items
+
+tests/test_api_health.py::test_health PASSED                             [  2%]
+tests/test_api_health.py::test_cors_headers PASSED                       [  4%]
+tests/test_category_overrides.py::test_empty_overrides PASSED            [  6%]
+tests/test_category_overrides.py::test_add_override PASSED               [  8%]
+tests/test_category_overrides.py::test_add_duplicate_override PASSED     [ 10%]
+tests/test_category_overrides.py::test_add_multiple_overrides PASSED     [ 12%]
+tests/test_category_overrides.py::test_delete_override PASSED            [ 14%]
+tests/test_category_overrides.py::test_delete_nonexistent_override PASSED [ 16%]
+tests/test_profile.py::test_get_default_profile PASSED                   [ 18%]
+tests/test_profile.py::test_update_profile PASSED                        [ 20%]
+tests/test_profile.py::test_update_profile_partial PASSED                [ 22%]
+tests/test_settings.py::test_get_default_fy_settings PASSED              [ 24%]
+tests/test_settings.py::test_update_fy_settings_old_regime PASSED        [ 26%]
+tests/test_settings.py::test_update_fy_settings_itr3 PASSED              [ 28%]
+tests/test_settings.py::test_create_new_fy PASSED                        [ 30%]
+tests/test_settings.py::test_nonexistent_fy_returns_defaults PASSED      [ 32%]
+tests/test_stress.py::test_concurrent_reads PASSED                       [ 34%]
+tests/test_stress.py::test_concurrent_summary_and_tax PASSED             [ 36%]
+tests/test_stress.py::test_rapid_deduction_crud PASSED                   [ 38%]
+tests/test_stress.py::test_large_search_query PASSED                     [ 40%]
+tests/test_stress.py::test_zero_amount_deduction PASSED                  [ 42%]
+tests/test_stress.py::test_very_large_income PASSED                      [ 44%]
+tests/test_stress.py::test_concurrent_pdf_generation PASSED              [ 46%]
+tests/test_stress.py::test_filing_status_without_filing PASSED           [ 48%]
+tests/test_stress.py::test_invalid_filing_signal PASSED                  [ 51%]
+tests/test_stress.py::test_playwright_status PASSED                      [ 53%]
+tests/test_tax.py::test_add_deduction PASSED                             [ 55%]
+tests/test_tax.py::test_list_deductions PASSED                           [ 57%]
+tests/test_tax.py::test_delete_deduction PASSED                          [ 59%]
+tests/test_tax.py::test_add_tds_entry PASSED                             [ 61%]
+tests/test_tax.py::test_list_tds PASSED                                  [ 63%]
+tests/test_tax.py::test_delete_tds PASSED                                [ 65%]
+tests/test_tax.py::test_compute_tax_new_regime PASSED                    [ 67%]
+tests/test_tax.py::test_compute_tax_old_regime PASSED                    [ 69%]
+tests/test_tax.py::test_compute_tax_itr3 PASSED                          [ 71%]
+tests/test_tax.py::test_compare_regimes PASSED                           [ 73%]
+tests/test_tax.py::test_advance_tax_schedule PASSED                      [ 75%]
+tests/test_tax.py::test_pdf_report PASSED                                [ 77%]
+tests/test_tax.py::test_export_data PASSED                               [ 79%]
+tests/test_transactions.py::test_empty_transactions FAILED               [ 81%]
+tests/test_transactions.py::test_transaction_summary_empty FAILED        [ 83%]
+tests/test_transactions.py::test_seeded_transactions PASSED              [ 85%]
+tests/test_transactions.py::test_filter_by_category PASSED               [ 87%]
+tests/test_transactions.py::test_filter_by_tx_type PASSED                [ 89%]
+tests/test_transactions.py::test_search_narration PASSED                 [ 91%]
+tests/test_transactions.py::test_pagination PASSED                       [ 93%]
+tests/test_transactions.py::test_update_category PASSED                  [ 95%]
+tests/test_transactions.py::test_bulk_update FAILED                      [ 97%]
+tests/test_transactions.py::test_summary_with_data PASSED                [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_empty_transactions ____________________________
+tests/test_transactions.py:11: in test_empty_transactions
+    assert data["transactions"] == []
+E   AssertionError: assert [{'amount': 6...l', ...}, ...] == []
+E     
+E     Left contains 50 more items, first extra item: {'amount': 61000.0, 'balance': None, 'bank_account_id': None, 'category': 'professional_income', ...}
+E     
+E     Full diff:
+E     - []
+E     + [
+E     +     {...
+E     
+E     ...Full output truncated (750 lines hidden), use '-vv' to show
+________________________ test_transaction_summary_empty ________________________
+tests/test_transactions.py:21: in test_transaction_summary_empty
+    assert data["total_income"] == 0.0
+E   assert 1203500.0 == 0.0
+_______________________________ test_bulk_update _______________________________
+tests/test_transactions.py:108: in test_bulk_update
+    assert res.status_code == 200
+E   assert 422 == 200
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+=========================== short test summary info ============================
+FAILED tests/test_transactions.py::test_empty_transactions - AssertionError: ...
+FAILED tests/test_transactions.py::test_transaction_summary_empty - assert 12...
+FAILED tests/test_transactions.py::test_bulk_update - assert 422 == 200
+========================= 3 failed, 46 passed in 0.35s =========================

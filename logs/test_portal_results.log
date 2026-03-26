@@ -1,0 +1,80 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.3, pytest-9.0.2, pluggy-1.6.0 -- /Volumes/HomeX/rohitthink/Projects/IT/freefile/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Volumes/HomeX/rohitthink/Projects/IT/freefile
+plugins: asyncio-1.3.0, anyio-4.13.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 3 items
+
+tests/test_portal_live.py::test_portal_reachable FAILED                  [ 33%]
+tests/test_portal_live.py::test_portal_ssl_valid FAILED                  [ 66%]
+tests/test_portal_live.py::test_portal_headed_browser FAILED             [100%]
+
+=================================== FAILURES ===================================
+____________________________ test_portal_reachable _____________________________
+tests/test_portal_live.py:28: in test_portal_reachable
+    browser = await p.chromium.launch(headless=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.14/site-packages/playwright/async_api/_generated.py:14547: in launch
+    await self._impl_obj.launch(
+venv/lib/python3.14/site-packages/playwright/_impl/_browser_type.py:97: in launch
+    await self._channel.send(
+venv/lib/python3.14/site-packages/playwright/_impl/_connection.py:69: in send
+    return await self._connection.wrap_api_call(
+venv/lib/python3.14/site-packages/playwright/_impl/_connection.py:559: in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+E   playwright._impl._errors.Error: BrowserType.launch: Executable doesn't exist at /Volumes/HomeX/rohitthink/Library/Caches/ms-playwright/chromium_headless_shell-1208/chrome-headless-shell-mac-arm64/chrome-headless-shell
+E   ╔════════════════════════════════════════════════════════════╗
+E   ║ Looks like Playwright was just installed or updated.       ║
+E   ║ Please run the following command to download new browsers: ║
+E   ║                                                            ║
+E   ║     playwright install                                     ║
+E   ║                                                            ║
+E   ║ <3 Playwright Team                                         ║
+E   ╚════════════════════════════════════════════════════════════╝
+____________________________ test_portal_ssl_valid _____________________________
+tests/test_portal_live.py:96: in test_portal_ssl_valid
+    browser = await p.chromium.launch(headless=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.14/site-packages/playwright/async_api/_generated.py:14547: in launch
+    await self._impl_obj.launch(
+venv/lib/python3.14/site-packages/playwright/_impl/_browser_type.py:97: in launch
+    await self._channel.send(
+venv/lib/python3.14/site-packages/playwright/_impl/_connection.py:69: in send
+    return await self._connection.wrap_api_call(
+venv/lib/python3.14/site-packages/playwright/_impl/_connection.py:559: in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+E   playwright._impl._errors.Error: BrowserType.launch: Executable doesn't exist at /Volumes/HomeX/rohitthink/Library/Caches/ms-playwright/chromium_headless_shell-1208/chrome-headless-shell-mac-arm64/chrome-headless-shell
+E   ╔════════════════════════════════════════════════════════════╗
+E   ║ Looks like Playwright was just installed or updated.       ║
+E   ║ Please run the following command to download new browsers: ║
+E   ║                                                            ║
+E   ║     playwright install                                     ║
+E   ║                                                            ║
+E   ║ <3 Playwright Team                                         ║
+E   ╚════════════════════════════════════════════════════════════╝
+__________________________ test_portal_headed_browser __________________________
+tests/test_portal_live.py:123: in test_portal_headed_browser
+    browser = await p.chromium.launch(
+venv/lib/python3.14/site-packages/playwright/async_api/_generated.py:14547: in launch
+    await self._impl_obj.launch(
+venv/lib/python3.14/site-packages/playwright/_impl/_browser_type.py:97: in launch
+    await self._channel.send(
+venv/lib/python3.14/site-packages/playwright/_impl/_connection.py:69: in send
+    return await self._connection.wrap_api_call(
+venv/lib/python3.14/site-packages/playwright/_impl/_connection.py:559: in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+E   playwright._impl._errors.Error: BrowserType.launch: Executable doesn't exist at /Volumes/HomeX/rohitthink/Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing
+E   ╔════════════════════════════════════════════════════════════╗
+E   ║ Looks like Playwright was just installed or updated.       ║
+E   ║ Please run the following command to download new browsers: ║
+E   ║                                                            ║
+E   ║     playwright install                                     ║
+E   ║                                                            ║
+E   ║ <3 Playwright Team                                         ║
+E   ╚════════════════════════════════════════════════════════════╝
+=========================== short test summary info ============================
+FAILED tests/test_portal_live.py::test_portal_reachable - playwright._impl._e...
+FAILED tests/test_portal_live.py::test_portal_ssl_valid - playwright._impl._e...
+FAILED tests/test_portal_live.py::test_portal_headed_browser - playwright._im...
+============================== 3 failed in 4.71s ===============================
