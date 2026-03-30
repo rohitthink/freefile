@@ -1,15 +1,85 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getTransactionSummary, computeTax, compareRegimes, getFYSettings, getApiBase } from "@/lib/api";
-import { formatCurrency } from "@/lib/utils";
-import type { TransactionSummary, TaxResult, RegimeComparison, FYSettings } from "@/lib/types";
+import { useEffect, useState, useRef } from "react";
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell, Legend,
+  getTransactionSummary,
+  computeTax,
+  compareRegimes,
+  getFYSettings,
+  getApiBase,
+} from "@/lib/api";
+import { formatCurrency } from "@/lib/utils";
+import type {
+  TransactionSummary,
+  TaxResult,
+  RegimeComparison,
+  FYSettings,
+} from "@/lib/types";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
+import {
+  Upload,
+  TrendingUp,
+  TrendingDown,
+  Calculator,
+  FileText,
+  ArrowRight,
+} from "lucide-react";
+import { useAppStore } from "@/lib/store";
 
-const PIE_COLORS = ["#22c55e", "#3b82f6", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#84cc16"];
+const PIE_COLORS = [
+  "#6366f1",
+  "#22c55e",
+  "#f59e0b",
+  "#ec4899",
+  "#06b6d4",
+  "#8b5cf6",
+  "#84cc16",
+];
+
+function AnimatedNumber({ value, prefix = "" }: { value: number; prefix?: string }) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<number | null>(null);
+
+  useEffect(() => {
+    const duration = 1000;
+    const start = performance.now();
+    const startVal = 0;
+
+    const animate = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(startVal + (value - startVal) * eased));
+      if (progress < 1) {
+        ref.current = requestAnimationFrame(animate);
+      }
+    };
+
+    ref.current = requestAnimationFrame(animate);
+    return () => {
+      if (ref.current) cancelAnimationFrame(ref.current);
+    };
+  }, [value]);
+
+  return (
+    <span>
+      {prefix}
+      {new Intl.NumberFormat("en-IN").format(display)}
+    </span>
+  );
+}
 
 export default function Dashboard() {
   const [summary, setSummary] = useState<TransactionSummary | null>(null);
@@ -17,6 +87,12 @@ export default function Dashboard() {
   const [comparison, setComparison] = useState<RegimeComparison | null>(null);
   const [fySettings, setFySettings] = useState<FYSettings | null>(null);
   const [loading, setLoading] = useState(true);
+  const userName = useAppStore((s) => s.userName);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     async function load() {
@@ -42,14 +118,22 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
       </div>
     );
   }
 
   const hasData = summary && summary.total_income > 0;
 
-  // Prepare chart data
+  const greeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
+  const displayName = mounted && userName ? userName.split(" ")[0] : "";
+
   const monthlyData = summary
     ? Object.entries(summary.monthly)
         .sort(([a], [b]) => a.localeCompare(b))
@@ -68,94 +152,210 @@ export default function Dashboard() {
     : [];
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h2>
+    <div className="animate-fade-in">
+      {/* Greeting */}
+      <div className="mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+          {greeting()}
+          {displayName ? `, ${displayName}` : ""}
+        </h2>
+        <p className="text-gray-500 mt-1 text-sm">
+          FY 2025-26 | {fySettings?.regime === "old" ? "Old" : "New"} Regime |{" "}
+          {fySettings?.itr_form || "ITR-4"}
+        </p>
+      </div>
 
       {!hasData ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
-          <h3 className="mt-4 text-lg font-semibold text-gray-900">No data yet</h3>
-          <p className="mt-2 text-sm text-gray-500">Upload your bank statements to get started.</p>
-          <a href="/upload" className="mt-4 inline-block px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800 transition-colors">
+        <div className="glass-card rounded-2xl p-16 text-center max-w-lg mx-auto animate-slide-up">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+            <Upload className="w-7 h-7 text-white" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900">No data yet</h3>
+          <p className="mt-2 text-sm text-gray-500 max-w-sm mx-auto">
+            Upload your bank statements to see your income, expenses, and tax
+            calculations.
+          </p>
+          <a
+            href="/upload"
+            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-2xl text-sm font-medium hover:bg-gray-800 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
             Upload Statement
+            <ArrowRight className="w-4 h-4" />
           </a>
         </div>
       ) : (
         <>
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <Card title="Total Income" value={formatCurrency(summary!.total_income)} color="green" />
-            <Card title="Total Expenses" value={formatCurrency(summary!.total_expenses)} color="red" />
-            <Card title="Tax Payable" value={tax ? formatCurrency(tax.tax_payable) : "--"} color="orange" />
-            <Card title="Effective Rate" value={tax && tax.gross_total_income > 0 ? `${((tax.total_tax / tax.gross_total_income) * 100).toFixed(1)}%` : "--"} color="blue" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 stagger-children">
+            <StatCard
+              title="Total Income"
+              value={summary!.total_income}
+              icon={<TrendingUp className="w-5 h-5" />}
+              gradient="from-emerald-500 to-green-600"
+              iconBg="bg-emerald-500/10"
+              iconColor="text-emerald-600"
+            />
+            <StatCard
+              title="Total Expenses"
+              value={summary!.total_expenses}
+              icon={<TrendingDown className="w-5 h-5" />}
+              gradient="from-rose-500 to-red-600"
+              iconBg="bg-rose-500/10"
+              iconColor="text-rose-600"
+            />
+            <StatCard
+              title="Tax Payable"
+              value={tax ? tax.tax_payable : 0}
+              icon={<Calculator className="w-5 h-5" />}
+              gradient="from-amber-500 to-orange-600"
+              iconBg="bg-amber-500/10"
+              iconColor="text-amber-600"
+            />
+            <StatCard
+              title="Effective Rate"
+              value={
+                tax && tax.gross_total_income > 0
+                  ? Math.round(
+                      (tax.total_tax / tax.gross_total_income) * 100 * 10
+                    ) / 10
+                  : 0
+              }
+              suffix="%"
+              icon={<FileText className="w-5 h-5" />}
+              gradient="from-blue-500 to-indigo-600"
+              iconBg="bg-blue-500/10"
+              iconColor="text-blue-600"
+              noPrefix
+            />
           </div>
 
-          {/* Regime recommendation banner */}
+          {/* Regime recommendation */}
           {comparison && comparison.savings > 0 && (
-            <div className={`rounded-xl border p-4 mb-6 flex items-center justify-between ${
-              comparison.recommended === "new" ? "bg-blue-50 border-blue-200" : "bg-purple-50 border-purple-200"
-            }`}>
-              <div>
-                <p className="text-sm font-medium text-gray-900">
-                  {comparison.recommended === "new" ? "New" : "Old"} tax regime saves you {formatCurrency(comparison.savings)}
-                </p>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Old: {formatCurrency(comparison.old_regime.tax_payable)} vs New: {formatCurrency(comparison.new_regime.tax_payable)}
-                </p>
+            <div className="glass-card rounded-2xl p-5 mb-6 flex items-center justify-between animate-slide-up">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    Switch to{" "}
+                    {comparison.recommended === "new" ? "New" : "Old"} Regime to
+                    save {formatCurrency(comparison.savings)}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Old: {formatCurrency(comparison.old_regime.tax_payable)} vs
+                    New: {formatCurrency(comparison.new_regime.tax_payable)}
+                  </p>
+                </div>
               </div>
-              <a href="/tax" className="text-sm font-medium text-gray-700 hover:text-gray-900 underline">
-                View details →
+              <a
+                href="/tax"
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+              >
+                Details
+                <ArrowRight className="w-3.5 h-3.5" />
               </a>
             </div>
           )}
 
-          {/* Download PDF Report */}
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={() => window.open(`${getApiBase()}/report/pdf?fy=2025-26`, "_blank")}
-              className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Download PDF Report
-            </button>
+          {/* Quick Actions */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            {[
+              { label: "Upload Statement", href: "/upload", icon: Upload },
+              { label: "View Transactions", href: "/transactions", icon: FileText },
+              { label: "Capital Gains", href: "/capital-gains", icon: TrendingUp },
+              {
+                label: "Download Report",
+                href: "#",
+                icon: FileText,
+                onClick: () =>
+                  window.open(
+                    `${getApiBase()}/report/pdf?fy=2025-26`,
+                    "_blank"
+                  ),
+              },
+            ].map((action) => {
+              const Icon = action.icon;
+              return (
+                <a
+                  key={action.label}
+                  href={action.href}
+                  onClick={action.onClick}
+                  className="glass-card rounded-2xl p-4 flex items-center gap-3 hover:scale-[1.02] transition-all active:scale-[0.98] cursor-pointer"
+                >
+                  <Icon className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-700">
+                    {action.label}
+                  </span>
+                </a>
+              );
+            })}
           </div>
 
-          {/* Charts Row */}
+          {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* Monthly Income vs Expenses Bar Chart */}
             {monthlyData.length > 0 && (
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="font-semibold text-gray-900 mb-4">Monthly Income vs Expenses</h3>
+              <div className="glass-card rounded-2xl p-6 animate-slide-up">
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  Monthly Income vs Expenses
+                </h3>
                 <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={monthlyData} barGap={2}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                    <XAxis dataKey="month" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#f0f0f0"
+                    />
+                    <XAxis
+                      dataKey="month"
+                      tick={{ fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <YAxis
                       tick={{ fontSize: 11 }}
                       axisLine={false}
                       tickLine={false}
-                      tickFormatter={(v: number) => v >= 100000 ? `${(v / 100000).toFixed(0)}L` : v >= 1000 ? `${(v / 1000).toFixed(0)}K` : String(v)}
+                      tickFormatter={(v: number) =>
+                        v >= 100000
+                          ? `${(v / 100000).toFixed(0)}L`
+                          : v >= 1000
+                            ? `${(v / 1000).toFixed(0)}K`
+                            : String(v)
+                      }
                     />
                     <Tooltip
                       formatter={(value) => formatCurrency(Number(value))}
                       labelFormatter={(label) => `Month: ${label}`}
-                      contentStyle={{ borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13 }}
+                      contentStyle={{
+                        borderRadius: 12,
+                        border: "none",
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                        fontSize: 13,
+                      }}
                     />
-                    <Bar dataKey="income" fill="#22c55e" radius={[4, 4, 0, 0]} name="Income" />
-                    <Bar dataKey="expenses" fill="#ef4444" radius={[4, 4, 0, 0]} name="Expenses" />
+                    <Bar
+                      dataKey="income"
+                      fill="#22c55e"
+                      radius={[6, 6, 0, 0]}
+                      name="Income"
+                    />
+                    <Bar
+                      dataKey="expenses"
+                      fill="#ef4444"
+                      radius={[6, 6, 0, 0]}
+                      name="Expenses"
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             )}
 
-            {/* Income Sources Pie Chart */}
             {incomePieData.length > 0 && (
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="font-semibold text-gray-900 mb-4">Income Sources</h3>
+              <div className="glass-card rounded-2xl p-6 animate-slide-up">
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  Income Sources
+                </h3>
                 <ResponsiveContainer width="100%" height={280}>
                   <PieChart>
                     <Pie
@@ -174,65 +374,144 @@ export default function Dashboard() {
                       labelLine={false}
                     >
                       {incomePieData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={PIE_COLORS[index % PIE_COLORS.length]}
+                        />
                       ))}
                     </Pie>
                     <Legend
                       verticalAlign="bottom"
                       height={36}
-                      formatter={(value: string) => <span className="text-xs text-gray-600 capitalize">{value}</span>}
+                      formatter={(value: string) => (
+                        <span className="text-xs text-gray-600 capitalize">
+                          {value}
+                        </span>
+                      )}
                     />
-                    <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                    <Tooltip
+                      formatter={(value) => formatCurrency(Number(value))}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
             )}
           </div>
 
-          {/* Tax Breakdown + Category Lists */}
+          {/* Tax Breakdown + Expense Breakdown */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Tax Breakdown ({tax?.regime === "new" ? "New" : "Old"} Regime)</h3>
+            <div className="glass-card rounded-2xl p-6">
+              <h3 className="font-semibold text-gray-900 mb-4">
+                Tax Breakdown (
+                {tax?.regime === "new" ? "New" : "Old"} Regime)
+              </h3>
               {tax && (
-                <div className="space-y-2">
-                  <Row label="Gross Income" value={formatCurrency(tax.gross_total_income)} />
-                  {tax.deemed_income !== null && <Row label="Deemed Income (44ADA)" value={formatCurrency(tax.deemed_income)} />}
-                  {tax.business_expenses !== null && <Row label="Business Expenses" value={`-${formatCurrency(tax.business_expenses)}`} />}
-                  <Row label="Deductions" value={`-${formatCurrency(tax.total_deductions)}`} />
-                  <Row label="Taxable Income" value={formatCurrency(tax.taxable_income)} bold />
-                  <Row label="Tax on Income" value={formatCurrency(tax.tax_on_income)} />
-                  {tax.surcharge > 0 && <Row label="Surcharge" value={formatCurrency(tax.surcharge)} />}
-                  <Row label="Cess (4%)" value={formatCurrency(tax.cess)} />
-                  <Row label="Total Tax" value={formatCurrency(tax.total_tax)} bold />
-                  {tax.tds_credit > 0 && <Row label="TDS Credit" value={`-${formatCurrency(tax.tds_credit)}`} />}
-                  {tax.advance_tax_paid > 0 && <Row label="Advance Tax Paid" value={`-${formatCurrency(tax.advance_tax_paid)}`} />}
+                <div className="space-y-2.5">
+                  <TaxRow
+                    label="Gross Income"
+                    value={formatCurrency(tax.gross_total_income)}
+                  />
+                  {tax.deemed_income !== null && (
+                    <TaxRow
+                      label="Deemed Income (44ADA)"
+                      value={formatCurrency(tax.deemed_income)}
+                    />
+                  )}
+                  {tax.business_expenses !== null && (
+                    <TaxRow
+                      label="Business Expenses"
+                      value={`-${formatCurrency(tax.business_expenses)}`}
+                    />
+                  )}
+                  <TaxRow
+                    label="Deductions"
+                    value={`-${formatCurrency(tax.total_deductions)}`}
+                  />
+                  <TaxRow
+                    label="Taxable Income"
+                    value={formatCurrency(tax.taxable_income)}
+                    bold
+                  />
+                  <TaxRow
+                    label="Tax on Income"
+                    value={formatCurrency(tax.tax_on_income)}
+                  />
+                  {tax.surcharge > 0 && (
+                    <TaxRow
+                      label="Surcharge"
+                      value={formatCurrency(tax.surcharge)}
+                    />
+                  )}
+                  <TaxRow
+                    label="Cess (4%)"
+                    value={formatCurrency(tax.cess)}
+                  />
+                  <TaxRow
+                    label="Total Tax"
+                    value={formatCurrency(tax.total_tax)}
+                    bold
+                  />
+                  {tax.tds_credit > 0 && (
+                    <TaxRow
+                      label="TDS Credit"
+                      value={`-${formatCurrency(tax.tds_credit)}`}
+                    />
+                  )}
+                  {tax.advance_tax_paid > 0 && (
+                    <TaxRow
+                      label="Advance Tax Paid"
+                      value={`-${formatCurrency(tax.advance_tax_paid)}`}
+                    />
+                  )}
                   <div className="border-t border-gray-200 pt-2 mt-2">
                     {tax.tax_payable > 0 ? (
-                      <Row label="Tax Payable" value={formatCurrency(tax.tax_payable)} bold />
+                      <TaxRow
+                        label="Tax Payable"
+                        value={formatCurrency(tax.tax_payable)}
+                        bold
+                      />
                     ) : (
-                      <Row label="Refund Due" value={formatCurrency(tax.tax_refund)} bold />
+                      <TaxRow
+                        label="Refund Due"
+                        value={formatCurrency(tax.tax_refund)}
+                        bold
+                      />
                     )}
                   </div>
                 </div>
               )}
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Expense Breakdown</h3>
-              {summary && Object.keys(summary.expense_by_category).length > 0 ? (
+            <div className="glass-card rounded-2xl p-6">
+              <h3 className="font-semibold text-gray-900 mb-4">
+                Expense Breakdown
+              </h3>
+              {summary &&
+              Object.keys(summary.expense_by_category).length > 0 ? (
                 Object.entries(summary.expense_by_category)
                   .sort(([, a], [, b]) => b.total - a.total)
                   .map(([cat, data]) => (
-                    <div key={cat} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                    <div
+                      key={cat}
+                      className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0"
+                    >
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600 capitalize">{cat.replace(/_/g, " ")}</span>
-                        <span className="text-xs text-gray-400">{data.count} txns</span>
+                        <span className="text-sm text-gray-600 capitalize">
+                          {cat.replace(/_/g, " ")}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          {data.count} txns
+                        </span>
                       </div>
-                      <span className="text-sm font-medium text-gray-900">{formatCurrency(data.total)}</span>
+                      <span className="text-sm font-medium text-gray-900">
+                        {formatCurrency(data.total)}
+                      </span>
                     </div>
                   ))
               ) : (
-                <p className="text-sm text-gray-500">No categorized expenses yet.</p>
+                <p className="text-sm text-gray-500">
+                  No categorized expenses yet.
+                </p>
               )}
             </div>
           </div>
@@ -242,26 +521,72 @@ export default function Dashboard() {
   );
 }
 
-function Card({ title, value, color }: { title: string; value: string; color: string }) {
-  const colors: Record<string, string> = {
-    green: "border-green-200 bg-green-50",
-    red: "border-red-200 bg-red-50",
-    orange: "border-orange-200 bg-orange-50",
-    blue: "border-blue-200 bg-blue-50",
-  };
+function StatCard({
+  title,
+  value,
+  icon,
+  gradient,
+  iconBg,
+  iconColor,
+  suffix,
+  noPrefix,
+}: {
+  title: string;
+  value: number;
+  icon: React.ReactNode;
+  gradient: string;
+  iconBg: string;
+  iconColor: string;
+  suffix?: string;
+  noPrefix?: boolean;
+}) {
   return (
-    <div className={`rounded-xl border p-6 ${colors[color] || "bg-white border-gray-200"}`}>
-      <p className="text-sm text-gray-600">{title}</p>
-      <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
+    <div className="glass-card rounded-2xl p-5 hover:scale-[1.02] transition-all duration-300">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-sm text-gray-500 font-medium">{title}</p>
+        <div className={`w-9 h-9 rounded-xl ${iconBg} flex items-center justify-center ${iconColor}`}>
+          {icon}
+        </div>
+      </div>
+      <p className="text-2xl font-bold text-gray-900">
+        {noPrefix ? (
+          <>
+            <AnimatedNumber value={value} />
+            {suffix}
+          </>
+        ) : (
+          <>
+            <AnimatedNumber value={value} prefix="₹" />
+            {suffix}
+          </>
+        )}
+      </p>
+      <div className={`mt-3 h-1 rounded-full bg-gradient-to-r ${gradient} opacity-60`} />
     </div>
   );
 }
 
-function Row({ label, value, bold }: { label: string; value: string; bold?: boolean }) {
+function TaxRow({
+  label,
+  value,
+  bold,
+}: {
+  label: string;
+  value: string;
+  bold?: boolean;
+}) {
   return (
     <div className="flex justify-between items-center">
-      <span className={`text-sm ${bold ? "font-semibold text-gray-900" : "text-gray-600"}`}>{label}</span>
-      <span className={`text-sm ${bold ? "font-semibold text-gray-900" : "text-gray-700"}`}>{value}</span>
+      <span
+        className={`text-sm ${bold ? "font-semibold text-gray-900" : "text-gray-600"}`}
+      >
+        {label}
+      </span>
+      <span
+        className={`text-sm ${bold ? "font-semibold text-gray-900" : "text-gray-700"}`}
+      >
+        {value}
+      </span>
     </div>
   );
 }

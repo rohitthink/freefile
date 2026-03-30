@@ -112,3 +112,32 @@ export async function getFYSettings(fy: string) {
 export async function updateFYSettings(settings: { fy: string; regime: string; itr_form: string }) {
   return fetchAPI("/settings/fy", { method: "PUT", body: JSON.stringify(settings) });
 }
+
+// Profile
+export async function getProfile() {
+  return fetchAPI<Record<string, string | number | null>>("/profile");
+}
+
+export async function saveProfile(profile: { name: string; pan: string; email: string }) {
+  return fetchAPI("/profile", { method: "PUT", body: JSON.stringify(profile) });
+}
+
+// Trading reports
+export async function uploadTradingReport(file: File, source: string, fy: string) {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("source", source);
+  form.append("fy", fy);
+
+  const res = await fetch(`${getApiBase()}/upload/trading`, { method: "POST", body: form });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(error.detail || "Upload failed");
+  }
+  return res.json();
+}
+
+// Capital Gains
+export async function getCapitalGains(fy: string) {
+  return fetchAPI(`/tax/capital-gains?fy=${fy}`);
+}

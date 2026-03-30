@@ -36,3 +36,17 @@ export {
   computeInterest234c,
   type AdvanceTaxInstallment,
 } from "./advance-tax";
+
+export {
+  computeCapitalGains,
+  STCG_111A_RATE,
+  LTCG_112A_RATE,
+  LTCG_112A_EXEMPT,
+  LTCG_112_RATE,
+  type GainType,
+  type CapitalGainEntry,
+  type CarryForwardLossType,
+  type CarryForwardLoss,
+  type LossToCarry,
+  type CapitalGainsResult,
+} from "./capital-gains";

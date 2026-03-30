@@ -117,6 +117,46 @@ CREATE TABLE IF NOT EXISTS profile (
     profession TEXT DEFAULT 'freelancer'
 );
 
+CREATE TABLE IF NOT EXISTS capital_gains (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fy TEXT NOT NULL,
+    source TEXT,
+    scrip_name TEXT NOT NULL,
+    isin TEXT,
+    asset_type TEXT,
+    buy_date TEXT,
+    sell_date TEXT,
+    quantity REAL,
+    buy_value REAL,
+    sell_value REAL,
+    expenses REAL DEFAULT 0,
+    gain_loss REAL,
+    gain_type TEXT,
+    holding_period_days INTEGER,
+    source_file TEXT,
+    FOREIGN KEY (fy) REFERENCES financial_years(fy)
+);
+
+CREATE TABLE IF NOT EXISTS dividends (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fy TEXT NOT NULL,
+    source TEXT,
+    scrip_name TEXT NOT NULL,
+    ex_date TEXT,
+    amount REAL,
+    tds REAL DEFAULT 0,
+    FOREIGN KEY (fy) REFERENCES financial_years(fy)
+);
+
+CREATE TABLE IF NOT EXISTS carry_forward_losses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fy_of_loss TEXT NOT NULL,
+    loss_type TEXT NOT NULL,
+    original_amount REAL NOT NULL,
+    remaining_amount REAL NOT NULL,
+    expires_fy TEXT
+);
+
 INSERT OR IGNORE INTO financial_years (fy, regime, itr_form) VALUES ('2025-26', 'new', 'ITR-4');
 INSERT OR IGNORE INTO profile (id) VALUES (1);
 """

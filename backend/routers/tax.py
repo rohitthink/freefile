@@ -3,6 +3,7 @@ from fastapi.responses import Response
 from backend.db.database import get_db
 from backend.tax.engine import compute_itr4, compute_itr3, compare_regimes
 from backend.tax.advance_tax import compute_advance_tax_schedule
+from backend.tax.capital_gains import compute_capital_gains
 from backend.reports.itr_summary import generate_itr_summary_pdf
 
 router = APIRouter()
@@ -79,10 +80,48 @@ async def compute_tax(fy: str = Query("2025-26")):
         adv_row = await cursor.fetchone()
         advance_tax_paid = adv_row[0] or 0.0
 
+        # --- Capital gains integration ---
+        cursor = await db.execute(
+            "SELECT gain_loss, gain_type, scrip_name FROM capital_gains WHERE fy = ?",
+            (fy,),
+        )
+        cg_rows = await cursor.fetchall()
+        cg_entries = [{"gain_loss": r[0], "gain_type": r[1], "scrip_name": r[2]} for r in cg_rows]
+
+        # Carry-forward losses
+        cursor = await db.execute(
+            "SELECT loss_type, remaining_amount, fy_of_loss, expires_fy FROM carry_forward_losses WHERE remaining_amount > 0"
+        )
+        cf_rows = await cursor.fetchall()
+        cf_losses = [
+            {"loss_type": r[0], "remaining_amount": r[1], "fy_of_loss": r[2], "expires_fy": r[3]}
+            for r in cf_rows
+        ]
+
+        cg_result = None
+        if cg_entries:
+            cg_result = compute_capital_gains(cg_entries, cf_losses if cf_losses else None)
+            # Add slab-rate CG income (speculative, F&O, STCG_slab) to other income
+            other_income["other"] += cg_result.get("income_at_slab_rate", 0.0)
+
+        # Dividends from trading
+        cursor = await db.execute("SELECT SUM(amount) FROM dividends WHERE fy = ?", (fy,))
+        div_row = await cursor.fetchone()
+        dividend_income = div_row[0] or 0.0
+        other_income["dividend"] += dividend_income
+
         if itr_form == "ITR-4":
             result = compute_itr4(professional_income, other_income, deductions_list, tds_credit, advance_tax_paid, regime)
         else:
             result = compute_itr3(professional_income, business_expenses, other_income, deductions_list, tds_credit, advance_tax_paid, regime)
+
+        # Merge capital gains tax into result
+        if cg_result:
+            result["capital_gains"] = cg_result
+            result["total_tax"] = round(result["total_tax"] + cg_result["total_cg_tax_with_cess"], 2)
+            net_tax = round(result["total_tax"] - tds_credit - advance_tax_paid, 2)
+            result["tax_payable"] = max(net_tax, 0.0)
+            result["tax_refund"] = abs(min(net_tax, 0.0))
 
         return result
 
@@ -374,3 +413,79 @@ async def generate_pdf_report(fy: str = Query("2025-26")):
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename=ITR_Summary_FY{fy}.pdf"},
     )
+
+
+@router.get("/tax/capital-gains")
+async def get_capital_gains(fy: str = Query("2025-26")):
+    """Compute capital gains summary from imported trading data."""
+    db = await get_db()
+    try:
+        # Get all capital gains entries
+        cursor = await db.execute(
+            """SELECT id, source, scrip_name, isin, asset_type, buy_date, sell_date,
+                      quantity, buy_value, sell_value, expenses, gain_loss, gain_type,
+                      holding_period_days, source_file
+            FROM capital_gains WHERE fy = ?""",
+            (fy,),
+        )
+        rows = await cursor.fetchall()
+        entries = [
+            {
+                "id": r[0], "source": r[1], "scrip_name": r[2], "isin": r[3],
+                "asset_type": r[4], "buy_date": r[5], "sell_date": r[6],
+                "quantity": r[7], "buy_value": r[8], "sell_value": r[9],
+                "expenses": r[10], "gain_loss": r[11], "gain_type": r[12],
+                "holding_period_days": r[13], "source_file": r[14],
+            }
+            for r in rows
+        ]
+
+        # Get carry-forward losses
+        cursor = await db.execute(
+            "SELECT loss_type, remaining_amount, fy_of_loss, expires_fy FROM carry_forward_losses WHERE remaining_amount > 0"
+        )
+        cf_rows = await cursor.fetchall()
+        cf_losses = [
+            {"loss_type": r[0], "remaining_amount": r[1], "fy_of_loss": r[2], "expires_fy": r[3]}
+            for r in cf_rows
+        ]
+
+        # Get dividends
+        cursor = await db.execute(
+            "SELECT source, scrip_name, ex_date, amount, tds FROM dividends WHERE fy = ?",
+            (fy,),
+        )
+        div_rows = await cursor.fetchall()
+        dividends = [
+            {"source": r[0], "scrip_name": r[1], "ex_date": r[2], "amount": r[3], "tds": r[4]}
+            for r in div_rows
+        ]
+        total_dividends = sum(d["amount"] or 0 for d in dividends)
+        total_dividend_tds = sum(d["tds"] or 0 for d in dividends)
+
+        # Compute capital gains
+        if entries:
+            cg_summary = compute_capital_gains(entries, cf_losses if cf_losses else None)
+        else:
+            cg_summary = {
+                "stcg_111a": 0, "ltcg_112a": 0, "ltcg_112": 0,
+                "speculative": 0, "fno_business": 0,
+                "total_cg_tax": 0, "total_cg_tax_with_cess": 0,
+                "losses_to_carry": [], "income_at_slab_rate": 0,
+            }
+
+        return {
+            "fy": fy,
+            "total_trades": len(entries),
+            "capital_gains": cg_summary,
+            "dividends": {
+                "total_amount": round(total_dividends, 2),
+                "total_tds": round(total_dividend_tds, 2),
+                "entries": dividends,
+            },
+            "trades": entries,
+            "carry_forward_losses": cf_losses,
+        }
+
+    finally:
+        await db.close()

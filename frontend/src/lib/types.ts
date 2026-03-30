@@ -98,6 +98,31 @@ export const CATEGORIES: Record<string, string> = {
   uncategorized: "Uncategorized",
 };
 
+export interface CapitalGainsTrade {
+  symbol: string;
+  isin: string;
+  buy_date: string;
+  sell_date: string;
+  buy_value: number;
+  sell_value: number;
+  gain: number;
+  type: string;
+  source: string;
+}
+
+export interface CapitalGainsSummary {
+  stcg_111a: number;
+  ltcg_112a: number;
+  ltcg_112: number;
+  stcg_slab: number;
+  fno: number;
+  speculative: number;
+  dividends: number;
+  loss_setoff: Record<string, number>;
+  carry_forward: Record<string, number>;
+  trades: CapitalGainsTrade[];
+}
+
 export const INCOME_CATEGORIES = [
   "professional_income", "interest_income", "dividend_income",
   "rental_income", "other_income",

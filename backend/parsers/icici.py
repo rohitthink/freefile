@@ -18,6 +18,7 @@ class ICICIParser(BankStatementParser):
             open_kwargs["password"] = password
 
         with pdfplumber.open(file_path, **open_kwargs) as pdf:
+            # Try table extraction first
             for page in pdf.pages:
                 tables = page.extract_tables()
                 for table in tables:
@@ -35,6 +36,101 @@ class ICICIParser(BankStatementParser):
                         tx = self._parse_row(row, col_map)
                         if tx:
                             transactions.append(tx)
+
+            # Fallback: text-based parsing if table extraction found nothing
+            if len(transactions) == 0:
+                transactions = self._parse_text_fallback(pdf)
+
+        return transactions
+
+    def _parse_text_fallback(self, pdf) -> list[RawTransaction]:
+        """Text-based fallback for ICICI eStatements where narrations span multiple lines."""
+        date_pattern = re.compile(r'^(\d{2}-\d{2}-\d{4})\b')
+        amount_pattern = re.compile(r'[\d,]+\.\d{2}')
+
+        # Collect all text lines across pages
+        all_lines: list[str] = []
+        for page in pdf.pages:
+            text = page.extract_text()
+            if text:
+                for line in text.split('\n'):
+                    stripped = line.strip()
+                    if stripped:
+                        all_lines.append(stripped)
+
+        # Group lines into transaction blocks: each block starts with a date line
+        blocks: list[list[str]] = []
+        for line in all_lines:
+            if date_pattern.match(line):
+                blocks.append([line])
+            elif blocks:
+                # Continuation line belongs to the previous transaction
+                blocks[-1].append(line)
+
+        transactions: list[RawTransaction] = []
+        prev_balance: Optional[float] = None
+
+        for block in blocks:
+            full_text = ' '.join(block)
+
+            # Extract the date from the first line
+            date_match = date_pattern.match(block[0])
+            if not date_match:
+                continue
+            parsed_date = self._parse_date(date_match.group(1), [])
+            if not parsed_date:
+                continue
+
+            # Extract all amounts (comma-formatted decimals) from the full block text
+            amounts = amount_pattern.findall(full_text)
+            if len(amounts) < 2:
+                continue
+
+            # Last amount is balance, second-to-last is the transaction amount
+            balance = self._parse_amount(amounts[-1])
+            tx_amount = self._parse_amount(amounts[-2])
+            if balance is None or tx_amount is None or tx_amount <= 0:
+                prev_balance = balance
+                continue
+
+            # Build narration: text between the date and the amounts region
+            # Remove the date prefix from the first line
+            narration_parts = list(block)
+            narration_parts[0] = date_pattern.sub('', narration_parts[0]).strip()
+            # Remove amount values from the last line to get clean narration
+            narration_text = ' '.join(narration_parts).strip()
+            for amt_str in amounts:
+                narration_text = narration_text.replace(amt_str, '', 1)
+            narration_text = re.sub(r'\s{2,}', ' ', narration_text).strip()
+            if not narration_text:
+                narration_text = "Unknown"
+
+            # Determine deposit vs withdrawal by comparing to previous balance
+            if prev_balance is not None:
+                tx_type = "credit" if balance > prev_balance else "debit"
+            else:
+                # No previous balance: check if there are separate deposit/withdrawal columns
+                # Heuristic: if there are 3+ amounts, try positional logic
+                # Otherwise default based on amount count pattern
+                if len(amounts) >= 3:
+                    # Typically: deposit amount, withdrawal amount, balance
+                    # One of deposit/withdrawal will be the tx_amount
+                    dep = self._parse_amount(amounts[-3])
+                    if dep and dep == tx_amount:
+                        tx_type = "credit"
+                    else:
+                        tx_type = "debit"
+                else:
+                    tx_type = "debit"
+
+            transactions.append(RawTransaction(
+                date=parsed_date,
+                narration=narration_text,
+                amount=tx_amount,
+                tx_type=tx_type,
+                balance=balance,
+            ))
+            prev_balance = balance
 
         return transactions
 

@@ -27,6 +27,20 @@ def categorize_transaction(
             if keyword.lower() in narration_lower:
                 return category
 
+    # Second pass: handle SBI truncated narrations (first 1-2 chars stripped)
+    # SBI bank statements often truncate the beginning of narration text, e.g.
+    # "ENDENCLUB" instead of "LENDENCLUB", "RANSACTREE" instead of "TRANSACTREE"
+    for category, keywords in CATEGORY_KEYWORDS.items():
+        for keyword in keywords:
+            kw = keyword.lower()
+            if len(kw) < 5:
+                continue
+            # Check if narration matches keyword with 1 or 2 leading chars removed
+            kw_strip1 = kw[1:]
+            kw_strip2 = kw[2:]
+            if kw_strip1 in narration_lower or kw_strip2 in narration_lower:
+                return category
+
     # Heuristic rules for uncategorized
     if tx_type == "credit":
         # Large credits via NEFT/RTGS/IMPS are likely professional income

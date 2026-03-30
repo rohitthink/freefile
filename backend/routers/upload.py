@@ -17,13 +17,13 @@ async def upload_statement(
     fy: str = Form("2025-26"),
     bank_hint: Optional[str] = Form(None),
 ):
-    """Upload a bank statement (PDF or CSV) and parse transactions."""
+    """Upload a bank statement (PDF, CSV, XLSX, or XLS) and parse transactions."""
     if not file.filename:
         raise HTTPException(400, "No file provided")
 
     ext = os.path.splitext(file.filename)[1].lower()
-    if ext not in (".pdf", ".csv", ".tsv"):
-        raise HTTPException(400, "Only PDF, CSV, and TSV files are supported")
+    if ext not in (".pdf", ".csv", ".tsv", ".xlsx", ".xls"):
+        raise HTTPException(400, "Only PDF, CSV, TSV, XLSX, and XLS files are supported")
 
     # Save to temp file
     with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
@@ -171,5 +171,165 @@ async def upload_26as(
         raise
     except Exception as e:
         raise HTTPException(500, f"Error parsing 26AS: {str(e)}")
+    finally:
+        os.unlink(tmp_path)
+
+
+@router.post("/upload/trading")
+async def upload_trading_report(
+    file: UploadFile = File(...),
+    source: str = Form(...),
+    fy: str = Form("2025-26"),
+):
+    """Upload a trading report (Zerodha, Groww MF, INDmoney) and parse capital gains."""
+    valid_sources = ("zerodha", "groww_mf", "indmoney")
+    if source not in valid_sources:
+        raise HTTPException(400, f"Invalid source. Must be one of: {', '.join(valid_sources)}")
+
+    if not file.filename:
+        raise HTTPException(400, "No file provided")
+
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in (".xlsx", ".xls"):
+        raise HTTPException(400, "Only XLSX/XLS files are supported for trading reports")
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
+        content = await file.read()
+        tmp.write(content)
+        tmp_path = tmp.name
+
+    try:
+        trades = []
+        dividends = []
+        summary = {}
+
+        if source == "zerodha":
+            from backend.parsers.zerodha import parse_zerodha_pnl
+            result = parse_zerodha_pnl(tmp_path)
+            trades = [
+                {
+                    "source": "zerodha", "scrip_name": t.scrip_name, "isin": t.isin,
+                    "asset_type": t.asset_type, "buy_date": t.buy_date,
+                    "sell_date": t.sell_date, "quantity": t.quantity,
+                    "buy_value": t.buy_value, "sell_value": t.sell_value,
+                    "expenses": t.expenses, "gain_loss": t.gain_loss,
+                    "gain_type": t.gain_type, "holding_period_days": t.holding_period_days,
+                }
+                for t in result.trades
+            ]
+            dividends = [
+                {
+                    "source": "zerodha", "scrip_name": d.scrip_name, "isin": d.isin,
+                    "ex_date": d.ex_date, "amount": d.amount, "tds": d.tds,
+                }
+                for d in result.dividends
+            ]
+            summary = result.summary
+
+        elif source == "groww_mf":
+            from backend.parsers.groww_mf import parse_groww_mf
+            result = parse_groww_mf(tmp_path)
+            trades = [
+                {
+                    "source": "groww_mf", "scrip_name": t.scrip_name, "isin": t.isin,
+                    "asset_type": t.asset_type, "buy_date": t.buy_date,
+                    "sell_date": t.sell_date, "quantity": t.quantity,
+                    "buy_value": t.buy_value, "sell_value": t.sell_value,
+                    "expenses": t.expenses, "gain_loss": t.gain_loss,
+                    "gain_type": t.gain_type, "holding_period_days": t.holding_period_days,
+                }
+                for t in result.trades
+            ]
+            summary = result.summary
+
+        elif source == "indmoney":
+            from backend.parsers.indmoney import parse_indmoney_us
+            result = parse_indmoney_us(tmp_path)
+            trades = [
+                {
+                    "source": "indmoney", "scrip_name": t.scrip_name, "isin": t.isin,
+                    "asset_type": t.asset_type, "buy_date": t.buy_date,
+                    "sell_date": t.sell_date, "quantity": t.quantity,
+                    "buy_value": t.buy_value, "sell_value": t.sell_value,
+                    "expenses": t.expenses, "gain_loss": t.gain_loss,
+                    "gain_type": t.gain_type, "holding_period_days": t.holding_period_days,
+                }
+                for t in result.trades
+            ]
+            dividends = [
+                {
+                    "source": "indmoney", "scrip_name": d.scrip_name,
+                    "ex_date": d.date, "amount": d.amount_inr, "tds": d.tds_inr,
+                }
+                for d in result.dividends
+            ]
+            summary = result.summary
+
+        if not trades and not dividends:
+            raise HTTPException(422, "Could not parse any trades or dividends from the file.")
+
+        # Save to database
+        db = await get_db()
+        trades_inserted = 0
+        dividends_inserted = 0
+        trades_skipped = 0
+        try:
+            for t in trades:
+                # Skip duplicates (same source + scrip + buy_date + sell_date + amount)
+                cursor = await db.execute(
+                    """SELECT id FROM capital_gains
+                    WHERE fy=? AND source=? AND scrip_name=? AND buy_date=? AND sell_date=? AND gain_loss=?""",
+                    (fy, t["source"], t["scrip_name"], t["buy_date"], t["sell_date"], t["gain_loss"]),
+                )
+                if await cursor.fetchone():
+                    trades_skipped += 1
+                    continue
+
+                await db.execute(
+                    """INSERT INTO capital_gains
+                    (fy, source, scrip_name, isin, asset_type, buy_date, sell_date, quantity,
+                     buy_value, sell_value, expenses, gain_loss, gain_type, holding_period_days, source_file)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (fy, t["source"], t["scrip_name"], t["isin"], t["asset_type"],
+                     t["buy_date"], t["sell_date"], t["quantity"], t["buy_value"],
+                     t["sell_value"], t["expenses"], t["gain_loss"], t["gain_type"],
+                     t["holding_period_days"], file.filename),
+                )
+                trades_inserted += 1
+
+            for d in dividends:
+                cursor = await db.execute(
+                    """SELECT id FROM dividends
+                    WHERE fy=? AND source=? AND scrip_name=? AND amount=?""",
+                    (fy, d["source"], d["scrip_name"], d["amount"]),
+                )
+                if await cursor.fetchone():
+                    continue
+
+                await db.execute(
+                    """INSERT INTO dividends (fy, source, scrip_name, ex_date, amount, tds)
+                    VALUES (?, ?, ?, ?, ?, ?)""",
+                    (fy, d["source"], d["scrip_name"], d.get("ex_date"), d["amount"], d.get("tds", 0)),
+                )
+                dividends_inserted += 1
+
+            await db.commit()
+        finally:
+            await db.close()
+
+        return {
+            "source": source,
+            "trades_imported": trades_inserted,
+            "trades_skipped": trades_skipped,
+            "dividends_imported": dividends_inserted,
+            "summary": summary,
+            "trades": trades,
+            "dividends": dividends,
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(500, f"Error parsing trading report: {str(e)}")
     finally:
         os.unlink(tmp_path)

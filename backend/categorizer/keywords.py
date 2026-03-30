@@ -27,6 +27,7 @@ CATEGORY_KEYWORDS: dict[str, list[str]] = {
         "mf-", "mutual fund", "sip", "nps", "ppf",
         "karvy", "mfutility", "bse star", "edelweiss",
         "smallcase", "coin", "et money", "paytm money",
+        "wint wealth", "fourdegree", "kite",
     ],
     "rent": [
         "rent", "house rent", "landlord", "rental",
@@ -55,6 +56,11 @@ CATEGORY_KEYWORDS: dict[str, list[str]] = {
     "transfer": [
         "self transfer", "own account", "ft-", "neft self",
         "imps self", "transfer to self",
+        "cred.club", "cred club", "paid via cred",
+        "cc billpay", "cc bill", "credit card bill", "credit card payment",
+        "bil/inft", "billpay",
+        "payment from ph",
+        "rohitthink",
     ],
 }
 

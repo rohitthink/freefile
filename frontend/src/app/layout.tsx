@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
 import { ToastProvider } from "@/components/Toast";
+import AppShell from "@/components/AppShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,17 +25,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
       </head>
-      <body className="min-h-full flex bg-gray-50">
+      <body className="min-h-full bg-[#f5f5f7]">
         <ToastProvider>
-          <Sidebar />
-          {/* Mobile: no left margin; Desktop: sidebar margin */}
-          <main className="flex-1 ml-0 md:ml-64 p-4 md:p-8 pt-16 md:pt-8">
-            {children}
-          </main>
+          <AppShell>{children}</AppShell>
         </ToastProvider>
       </body>
     </html>
