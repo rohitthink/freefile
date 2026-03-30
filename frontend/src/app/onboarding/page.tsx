@@ -508,7 +508,7 @@ function ITRStep({
                 </p>
               </div>
               {itrForm === "ITR-4" && (
-                <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
                   <Check className="w-3.5 h-3.5 text-white" />
                 </div>
               )}
@@ -589,7 +589,7 @@ function ITRStep({
                 </p>
               </div>
               {itrForm === "ITR-3" && (
-                <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
                   <Check className="w-3.5 h-3.5 text-white" />
                 </div>
               )}
@@ -694,6 +694,33 @@ function ReadyStep({ name }: { name: string }) {
       >
         Upload your bank statements and start filing your ITR.
       </p>
+
+      <div
+        className={`mt-8 text-left max-w-sm mx-auto space-y-2 transition-all duration-700 delay-700 ${showCheck ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+      >
+        <p className="text-xs font-semibold text-white/40 uppercase tracking-wider">
+          Quick Start Checklist
+        </p>
+        <div className="p-3 rounded-xl border border-white/10 bg-white/5">
+          <p className="text-xs text-white/70 leading-relaxed">
+            <strong className="text-white/90">1.</strong> Upload bank
+            statements (PDF/Excel) from all your accounts
+          </p>
+        </div>
+        <div className="p-3 rounded-xl border border-white/10 bg-white/5">
+          <p className="text-xs text-white/70 leading-relaxed">
+            <strong className="text-white/90">2.</strong> Upload{" "}
+            <strong className="text-blue-400">Form 26AS</strong> from
+            incometax.gov.in to claim TDS credits
+          </p>
+        </div>
+        <div className="p-3 rounded-xl border border-white/10 bg-white/5">
+          <p className="text-xs text-white/70 leading-relaxed">
+            <strong className="text-white/90">3.</strong> Upload trading P&L
+            reports (Zerodha, Groww, INDmoney) for capital gains
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -11,6 +11,8 @@ import {
   Download,
   ArrowRight,
   X,
+  ChevronDown,
+  Lightbulb,
 } from "lucide-react";
 
 type TabType = "bank" | "form26as" | "trading";
@@ -285,7 +287,7 @@ function BankUploader() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Leave blank if not encrypted"
-            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           />
         </div>
 
@@ -359,6 +361,7 @@ function Form26ASUploader() {
     total_tds: number;
   } | null>(null);
   const [error, setError] = useState("");
+  const [showInfo, setShowInfo] = useState(false);
 
   const handleUpload = async () => {
     if (!file) return;
@@ -392,37 +395,119 @@ function Form26ASUploader() {
         <h3 className="font-semibold text-slate-900 mb-2">
           Import Form 26AS
         </h3>
-        <p className="text-sm text-slate-500 mb-6">
+        <p className="text-sm text-slate-500 mb-4">
           Upload your Form 26AS PDF from TRACES to auto-import TDS credits.
         </p>
 
-        <div className="flex gap-3">
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            className="flex-1 text-sm file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:bg-blue-50 file:text-slate-700 hover:file:bg-blue-100 file:transition-colors file:cursor-pointer"
+        {/* What is 26AS - Education */}
+        <button
+          onClick={() => setShowInfo(!showInfo)}
+          className="mb-5 flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors font-medium"
+        >
+          <ChevronDown
+            className={`w-4 h-4 transition-transform duration-300 ${showInfo ? "rotate-180" : ""}`}
           />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="PDF password"
-            className="w-36 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          What is Form 26AS and why do I need it?
+        </button>
+
+        {showInfo && (
+          <div className="mb-6 space-y-3 animate-fade-in">
+            <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100">
+              <p className="font-semibold text-sm text-slate-800 mb-2">What is Form 26AS?</p>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Form 26AS is your <strong>Annual Tax Statement</strong> maintained by the Income Tax Department.
+                It&apos;s a consolidated record of all taxes paid on your behalf during the financial year.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <p className="font-semibold text-sm text-slate-800 mb-2">What does it contain?</p>
+              <ul className="space-y-1.5 text-xs text-slate-600 leading-relaxed">
+                <li><strong>Part A</strong> — TDS on salary, professional fees, rent, interest (from employers, clients, banks)</li>
+                <li><strong>Part A1</strong> — TDS on sale of property (Section 194IA)</li>
+                <li><strong>Part A2</strong> — TDS on rent paid (Section 194IB)</li>
+                <li><strong>Part B</strong> — TCS (Tax Collected at Source) on foreign remittance, car purchase, etc.</li>
+                <li><strong>Part C</strong> — Advance tax and self-assessment tax paid by you</li>
+                <li><strong>Part D</strong> — Refunds received during the year</li>
+                <li><strong>Part F</strong> — Details of SFT (Specified Financial Transactions) like mutual fund purchases, property</li>
+                <li><strong>Part G</strong> — TDS defaults (pending demands)</li>
+              </ul>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200">
+              <div className="flex items-start gap-2">
+                <Lightbulb className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-sm text-slate-800 mb-1">Why is it important?</p>
+                  <ul className="space-y-1 text-xs text-slate-600 leading-relaxed">
+                    <li>Your <strong>TDS credits</strong> reduce your final tax payable — claim every rupee!</li>
+                    <li>If a client deducted TDS (10% on professional fees), it shows up here</li>
+                    <li>Banks deduct TDS on interest above ₹40,000 — check Part A</li>
+                    <li>Cross-verify with your ITR to avoid notices from the tax department</li>
+                    <li>Mismatch between 26AS and ITR is the #1 reason for tax notices</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
+              <p className="font-semibold text-sm text-slate-800 mb-2">How to download Form 26AS</p>
+              <ol className="space-y-1.5 text-xs text-slate-600 leading-relaxed list-decimal list-inside">
+                <li>Go to <strong>incometax.gov.in</strong> and log in with PAN</li>
+                <li>Navigate to <strong>e-File → Income Tax Returns → View Form 26AS</strong></li>
+                <li>You will be redirected to TRACES portal</li>
+                <li>Select <strong>Assessment Year</strong> (e.g., 2026-27 for FY 2025-26)</li>
+                <li>Choose <strong>View As: PDF</strong> and download</li>
+                <li>Password is usually your <strong>Date of Birth</strong> in DDMMYYYY format</li>
+              </ol>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5">
+              Form 26AS PDF
+            </label>
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              className="w-full text-sm text-slate-700 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:bg-blue-50 file:text-slate-700 hover:file:bg-blue-100 file:transition-colors file:cursor-pointer"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5">
+              PDF Password (usually your DOB in DDMMYYYY format)
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="e.g. 15061990"
+              className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            />
+          </div>
           <button
             onClick={handleUpload}
             disabled={!file || loading}
-            className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-medium disabled:opacity-50 hover:bg-blue-700 transition-all"
+            className="w-full px-6 py-3 bg-blue-600 text-white rounded-2xl text-sm font-semibold disabled:opacity-50 hover:bg-blue-700 transition-all hover:scale-[1.01] active:scale-[0.99]"
           >
-            {loading ? "..." : "Import"}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                Importing...
+              </span>
+            ) : (
+              "Import TDS Credits"
+            )}
           </button>
         </div>
 
         {error && (
-          <div className="mt-3 flex items-center gap-2 text-sm text-red-700">
-            <AlertCircle className="w-4 h-4" />
-            {error}
+          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700">{error}</p>
           </div>
         )}
         {result && (
@@ -454,28 +539,62 @@ function Form26ASUploader() {
 }
 
 function TradingUploader() {
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [source, setSource] = useState("zerodha");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{
-    trades_imported: number;
-    source: string;
-  } | null>(null);
+  const [uploadProgress, setUploadProgress] = useState("");
+  const [results, setResults] = useState<
+    { trades_imported: number; source: string }[]
+  >([]);
   const [error, setError] = useState("");
 
+  const addFiles = (incoming: FileList | null) => {
+    if (!incoming) return;
+    const newFiles: File[] = [];
+    for (let i = 0; i < incoming.length; i++) {
+      newFiles.push(incoming[i]);
+    }
+    setFiles((prev) => [...prev, ...newFiles]);
+  };
+
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const getFileIcon = (name: string) => {
+    if (name.endsWith(".pdf"))
+      return <FileText className="w-5 h-5 text-red-500" />;
+    if (name.endsWith(".xlsx") || name.endsWith(".xls"))
+      return <FileSpreadsheet className="w-5 h-5 text-green-600" />;
+    return <FileText className="w-5 h-5 text-blue-500" />;
+  };
+
   const handleUpload = async () => {
-    if (!file) return;
+    if (files.length === 0) return;
     setLoading(true);
     setError("");
-    setResult(null);
+    setResults([]);
 
-    try {
-      const res = await uploadTradingReport(file, source, "2025-26");
-      setResult(res);
-      setFile(null);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Upload failed");
+    const allResults: typeof results = [];
+    const errors: string[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      setUploadProgress(`Processing ${i + 1} of ${files.length}...`);
+      try {
+        const res = await uploadTradingReport(files[i], source, "2025-26");
+        allResults.push(res);
+      } catch (err: unknown) {
+        errors.push(
+          `${files[i].name}: ${err instanceof Error ? err.message : "Upload failed"}`
+        );
+      }
     }
+
+    if (errors.length > 0) setError(errors.join("\n"));
+    if (allResults.length > 0) setResults(allResults);
+
+    setFiles([]);
+    setUploadProgress("");
     setLoading(false);
   };
 
@@ -483,11 +602,10 @@ function TradingUploader() {
     <div className="max-w-2xl">
       <div className="glass-card rounded-2xl p-8">
         <h3 className="font-semibold text-slate-900 mb-2">
-          Import Trading Report
+          Import Trading Reports
         </h3>
         <p className="text-sm text-slate-500 mb-6">
-          Upload your P&L report or tax statement from your broker for capital
-          gains computation.
+          Upload P&L reports or tax statements from your broker. You can select multiple files at once.
         </p>
 
         <div className="space-y-4">
@@ -514,54 +632,100 @@ function TradingUploader() {
 
           <div>
             <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
-              P&L Report / Tax Statement
+              P&L Reports / Tax Statements
             </label>
             <input
               type="file"
               accept=".pdf,.csv,.xlsx,.xls"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="w-full text-sm file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:bg-blue-50 file:text-slate-700 hover:file:bg-blue-100 file:transition-colors file:cursor-pointer"
+              multiple
+              onChange={(e) => {
+                addFiles(e.target.files);
+                e.target.value = "";
+              }}
+              className="w-full text-sm text-slate-700 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:bg-blue-50 file:text-slate-700 hover:file:bg-blue-100 file:transition-colors file:cursor-pointer"
             />
           </div>
 
+          {/* Selected files list */}
+          {files.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                {files.length} file{files.length > 1 ? "s" : ""} selected
+              </p>
+              {files.map((f, i) => (
+                <div
+                  key={`${f.name}-${i}`}
+                  className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                >
+                  {getFileIcon(f.name)}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-900 truncate">
+                      {f.name}
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      {(f.size / 1024).toFixed(0)} KB
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => removeFile(i)}
+                    className="p-1 rounded-lg hover:bg-slate-200 transition-colors"
+                    title="Remove file"
+                  >
+                    <X className="w-4 h-4 text-slate-400" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
           <button
             onClick={handleUpload}
-            disabled={!file || loading}
-            className="w-full px-4 py-3.5 bg-blue-600 text-white rounded-2xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            disabled={files.length === 0 || loading}
+            className="w-full px-4 py-3.5 bg-blue-600 text-white rounded-2xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-[1.01] active:scale-[0.99]"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                Processing...
+                {uploadProgress}
               </span>
             ) : (
-              "Upload & Process"
+              `Upload & Process${files.length > 1 ? ` (${files.length} files)` : ""}`
             )}
           </button>
         </div>
 
         {error && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-red-500" />
-            <p className="text-sm text-red-700">{error}</p>
+          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700 whitespace-pre-line">{error}</p>
           </div>
         )}
 
-        {result && (
+        {results.length > 0 && (
           <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-emerald-600" />
-              <p className="text-sm text-emerald-800">
-                Imported {result.trades_imported} trades from {result.source}
-              </p>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+                <Check className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-emerald-800">
+                  Imported {results.reduce((sum, r) => sum + r.trades_imported, 0)} trades
+                  from {results.length} file{results.length > 1 ? "s" : ""}
+                </p>
+                {results.map((r, i) => (
+                  <p key={i} className="text-xs text-emerald-600 mt-1">
+                    {r.source}: {r.trades_imported} trades
+                  </p>
+                ))}
+                <a
+                  href="/capital-gains"
+                  className="text-sm text-emerald-700 font-medium mt-2 inline-flex items-center gap-1"
+                >
+                  View Capital Gains
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
             </div>
-            <a
-              href="/capital-gains"
-              className="text-sm text-emerald-700 font-medium mt-2 inline-flex items-center gap-1"
-            >
-              View Capital Gains
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
           </div>
         )}
       </div>

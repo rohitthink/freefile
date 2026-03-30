@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getFYSettings, updateFYSettings, getApiBase } from "@/lib/api";
 import { useAppStore } from "@/lib/store";
 import type { FYSettings } from "@/lib/types";
-import { Check, User } from "lucide-react";
+import { Check, User, AlertCircle } from "lucide-react";
 
 const API = getApiBase();
 
@@ -72,37 +72,59 @@ export default function SettingsPage() {
   const [touched, setTouched] = useState<
     Partial<Record<keyof Profile, boolean>>
   >({});
+  const [loadError, setLoadError] = useState("");
+  const [saveError, setSaveError] = useState("");
   const { setUserName, setRegime, setItrForm } = useAppStore();
 
   useEffect(() => {
     getFYSettings("2025-26")
       .then((s) => setSettings(s as FYSettings))
-      .catch(() => {});
+      .catch(() => setLoadError("Could not load FY settings. Is the backend running?"));
     fetch(`${API}/profile`)
-      .then((r) => r.json())
-      .then((p) => {
-        setProfile({ ...EMPTY_PROFILE, ...p });
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to load profile");
+        return r.json();
       })
-      .catch(() => {});
+      .then((p) => {
+        if (p && typeof p === "object") {
+          // Convert null values to empty strings
+          const cleaned: Record<string, string> = {};
+          for (const [k, v] of Object.entries(p)) {
+            if (k in EMPTY_PROFILE) {
+              cleaned[k] = v != null ? String(v) : "";
+            }
+          }
+          setProfile({ ...EMPTY_PROFILE, ...cleaned });
+        }
+      })
+      .catch(() => setLoadError("Could not load profile. Is the backend running?"));
   }, []);
-
-  useEffect(() => {
-    setErrors(validateProfile(profile));
-  }, [profile]);
 
   const handleBlur = (field: keyof Profile) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
+    // Validate only touched fields
+    const fieldErrors = validateProfile(profile);
+    setErrors((prev) => ({
+      ...prev,
+      [field]: fieldErrors[field],
+    }));
   };
 
   const handleSaveFY = async () => {
-    await updateFYSettings(settings);
-    setRegime(settings.regime);
-    setItrForm(settings.itr_form);
-    setSavedFY(true);
-    setTimeout(() => setSavedFY(false), 2000);
+    try {
+      await updateFYSettings(settings);
+      setRegime(settings.regime);
+      setItrForm(settings.itr_form);
+      setSavedFY(true);
+      setTimeout(() => setSavedFY(false), 2000);
+    } catch {
+      setSaveError("Failed to save FY settings");
+      setTimeout(() => setSaveError(""), 3000);
+    }
   };
 
   const handleSaveProfile = async () => {
+    // Mark all fields as touched
     const allTouched: Partial<Record<keyof Profile, boolean>> = {};
     for (const key of Object.keys(profile) as (keyof Profile)[]) {
       allTouched[key] = true;
@@ -113,17 +135,20 @@ export default function SettingsPage() {
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
 
-    await fetch(`${API}/profile`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(profile),
-    });
-    setUserName(profile.name);
-    setSavedProfile(true);
-    setTimeout(() => setSavedProfile(false), 2000);
+    try {
+      await fetch(`${API}/profile`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      });
+      setUserName(profile.name);
+      setSavedProfile(true);
+      setTimeout(() => setSavedProfile(false), 2000);
+    } catch {
+      setSaveError("Failed to save profile");
+      setTimeout(() => setSaveError(""), 3000);
+    }
   };
-
-  const hasErrors = Object.keys(errors).length > 0;
 
   return (
     <div className="animate-fade-in">
@@ -133,6 +158,20 @@ export default function SettingsPage() {
       <p className="text-slate-500 text-sm mb-8">
         Manage your profile, tax regime, and ITR form preferences.
       </p>
+
+      {loadError && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-2 max-w-4xl">
+          <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-800">{loadError}</p>
+        </div>
+      )}
+
+      {saveError && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-2 max-w-4xl">
+          <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+          <p className="text-sm text-red-700">{saveError}</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl">
         {/* Profile */}
@@ -237,7 +276,7 @@ export default function SettingsPage() {
                 onChange={(e) =>
                   setProfile({ ...profile, profession: e.target.value })
                 }
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="freelancer">
                   Freelancer / Independent Contractor
@@ -255,8 +294,7 @@ export default function SettingsPage() {
             </div>
             <button
               onClick={handleSaveProfile}
-              disabled={hasErrors}
-              className="w-full px-4 py-3 bg-blue-600 text-white rounded-2xl text-sm font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full px-4 py-3 bg-blue-600 text-white rounded-2xl text-sm font-semibold hover:bg-blue-700 transition-all hover:scale-[1.01] active:scale-[0.99]"
             >
               {savedProfile ? (
                 <span className="flex items-center justify-center gap-2">
@@ -286,7 +324,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setSettings({ ...settings, fy: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="2025-26">FY 2025-26 (AY 2026-27)</option>
                   <option value="2024-25">FY 2024-25 (AY 2025-26)</option>
@@ -420,7 +458,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}
         onBlur={onBlur}
-        className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+        className={`w-full px-4 py-2.5 bg-white border rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
           mono ? "font-mono tracking-wider uppercase" : ""
         } ${error ? "border-red-400" : "border-slate-200"}`}
       />
