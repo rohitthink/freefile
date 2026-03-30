@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
 import { saveProfile, updateFYSettings } from "@/lib/api";
-import { Check, ArrowRight, ArrowLeft } from "lucide-react";
+import { Check, ArrowRight, ArrowLeft, ChevronDown, Lightbulb } from "lucide-react";
 
 const TOTAL_STEPS = 5;
 const PAN_REGEX = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
@@ -290,6 +290,8 @@ function FYStep({
   regime: "old" | "new";
   setRegime: (v: "old" | "new") => void;
 }) {
+  const [showLearnMore, setShowLearnMore] = useState(false);
+
   return (
     <div>
       <h2 className="text-3xl font-bold text-white mb-2">Financial Year</h2>
@@ -308,7 +310,7 @@ function FYStep({
               onClick={() => setFY(y)}
               className={`p-4 rounded-2xl border text-left transition-all ${
                 fy === y
-                  ? "border-indigo-500 bg-indigo-500/10 text-white"
+                  ? "border-blue-500 bg-blue-500/10 text-white"
                   : "border-white/10 bg-white/5 text-white/60 hover:bg-white/10"
               }`}
             >
@@ -331,7 +333,7 @@ function FYStep({
             onClick={() => setRegime("new")}
             className={`p-4 rounded-2xl border text-left transition-all ${
               regime === "new"
-                ? "border-indigo-500 bg-indigo-500/10 text-white"
+                ? "border-blue-500 bg-blue-500/10 text-white"
                 : "border-white/10 bg-white/5 text-white/60 hover:bg-white/10"
             }`}
           >
@@ -348,7 +350,7 @@ function FYStep({
             onClick={() => setRegime("old")}
             className={`p-4 rounded-2xl border text-left transition-all ${
               regime === "old"
-                ? "border-indigo-500 bg-indigo-500/10 text-white"
+                ? "border-blue-500 bg-blue-500/10 text-white"
                 : "border-white/10 bg-white/5 text-white/60 hover:bg-white/10"
             }`}
           >
@@ -363,6 +365,97 @@ function FYStep({
           </button>
         </div>
       </div>
+
+      {/* Regime Education - Learn More */}
+      <div className="mt-6">
+        <button
+          onClick={() => setShowLearnMore(!showLearnMore)}
+          className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+        >
+          <ChevronDown
+            className={`w-4 h-4 transition-transform duration-300 ${
+              showLearnMore ? "rotate-180" : ""
+            }`}
+          />
+          Learn More — Which regime saves you more?
+        </button>
+
+        {showLearnMore && (
+          <div className="mt-4 space-y-4 animate-fade-in">
+            {/* New Regime details */}
+            <div className="p-4 rounded-2xl border border-white/10 bg-white/5">
+              <p className="font-semibold text-sm text-white mb-2">
+                New Regime Benefits
+              </p>
+              <ul className="space-y-1.5 text-xs text-white/60 leading-relaxed">
+                <li>Standard deduction: &#8377;75,000</li>
+                <li>No tax up to &#8377;12 lakhs (rebate under 87A)</li>
+                <li>
+                  Lower slab rates: 5% &rarr; 10% &rarr; 15% &rarr; 20% &rarr;
+                  25% &rarr; 30%
+                </li>
+                <li className="text-blue-400">
+                  Best if your deductions are less than &#8377;3-4 lakhs
+                </li>
+              </ul>
+            </div>
+
+            {/* Old Regime details */}
+            <div className="p-4 rounded-2xl border border-white/10 bg-white/5">
+              <p className="font-semibold text-sm text-white mb-2">
+                Old Regime Benefits
+              </p>
+              <ul className="space-y-1.5 text-xs text-white/60 leading-relaxed">
+                <li>
+                  Section 80C: Up to &#8377;1.5L (PPF, ELSS, life insurance,
+                  EPF)
+                </li>
+                <li>
+                  Section 80D: &#8377;25K-&#8377;1L (health insurance)
+                </li>
+                <li>HRA exemption (if paying rent)</li>
+                <li>
+                  Home loan interest: Up to &#8377;2L under Section 24(b)
+                </li>
+                <li>NPS: Extra &#8377;50K under 80CCD(1B)</li>
+                <li className="text-blue-400">
+                  Best if you claim HRA + 80C + 80D exceeding &#8377;3-4L total
+                </li>
+              </ul>
+            </div>
+
+            {/* Tax saving tips */}
+            <div className="p-4 rounded-2xl border border-amber-500/30 bg-amber-500/5">
+              <div className="flex items-center gap-2 mb-2">
+                <Lightbulb className="w-4 h-4 text-amber-400" />
+                <p className="font-semibold text-sm text-amber-300">
+                  Tax Saving Tips
+                </p>
+              </div>
+              <ul className="space-y-1.5 text-xs text-white/60 leading-relaxed">
+                <li>
+                  Max out your PPF (&#8377;1.5L/yr) — it&apos;s tax-free at
+                  maturity too
+                </li>
+                <li>
+                  Get a &#8377;5L health insurance — &#8377;25K deduction +
+                  &#8377;25K for parents
+                </li>
+                <li>
+                  Keep receipts for EVERY business expense if using ITR-3
+                </li>
+                <li>
+                  Advance tax: Pay before 15 Mar to avoid interest under 234C
+                </li>
+                <li>
+                  If your turnover is close to &#8377;75L, consider staying
+                  under to use ITR-4
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -374,6 +467,8 @@ function ITRStep({
   itrForm: "ITR-3" | "ITR-4";
   setItrForm: (v: "ITR-3" | "ITR-4") => void;
 }) {
+  const [expandedForm, setExpandedForm] = useState<string | null>(null);
+
   return (
     <div>
       <h2 className="text-3xl font-bold text-white mb-2">ITR Form</h2>
@@ -382,81 +477,172 @@ function ITRStep({
       </p>
 
       <div className="space-y-4">
-        <button
-          onClick={() => setItrForm("ITR-4")}
-          className={`w-full p-5 rounded-2xl border text-left transition-all ${
+        {/* ITR-4 */}
+        <div
+          className={`rounded-2xl border text-left transition-all ${
             itrForm === "ITR-4"
-              ? "border-indigo-500 bg-indigo-500/10"
+              ? "border-blue-500 bg-blue-500/10"
               : "border-white/10 bg-white/5 hover:bg-white/10"
           }`}
         >
-          <div className="flex items-start gap-4">
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold ${
-                itrForm === "ITR-4"
-                  ? "bg-indigo-500 text-white"
-                  : "bg-white/10 text-white/50"
-              }`}
-            >
-              4
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-white">
-                ITR-4 (Presumptive Income)
-              </p>
-              <p className="text-xs text-white/50 mt-1 leading-relaxed">
-                For freelancers under Rs 75L turnover.
-                <br />
-                50% deemed income under 44ADA.
-                <br />
-                Simple and most common for freelancers.
-              </p>
-            </div>
-            {itrForm === "ITR-4" && (
-              <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center">
-                <Check className="w-3.5 h-3.5 text-white" />
+          <button
+            onClick={() => setItrForm("ITR-4")}
+            className="w-full p-5 text-left"
+          >
+            <div className="flex items-start gap-4">
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 ${
+                  itrForm === "ITR-4"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white/10 text-white/50"
+                }`}
+              >
+                4
               </div>
-            )}
-          </div>
-        </button>
+              <div className="flex-1">
+                <p className="font-semibold text-white">
+                  ITR-4 (Presumptive Income)
+                </p>
+                <p className="text-xs text-white/50 mt-1">
+                  For freelancers & professionals under Section 44ADA
+                </p>
+              </div>
+              {itrForm === "ITR-4" && (
+                <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center shrink-0">
+                  <Check className="w-3.5 h-3.5 text-white" />
+                </div>
+              )}
+            </div>
+          </button>
 
-        <button
-          onClick={() => setItrForm("ITR-3")}
-          className={`w-full p-5 rounded-2xl border text-left transition-all ${
+          <button
+            onClick={() =>
+              setExpandedForm(expandedForm === "ITR-4" ? null : "ITR-4")
+            }
+            className="w-full px-5 pb-3 flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            <ChevronDown
+              className={`w-3 h-3 transition-transform duration-300 ${
+                expandedForm === "ITR-4" ? "rotate-180" : ""
+              }`}
+            />
+            Learn More
+          </button>
+
+          {expandedForm === "ITR-4" && (
+            <div className="px-5 pb-5 animate-fade-in">
+              <ul className="space-y-1.5 text-xs text-white/60 leading-relaxed">
+                <li>
+                  Turnover must be under &#8377;75 lakhs (&#8377;50L if cash
+                  receipts &gt; 5%)
+                </li>
+                <li>
+                  50% of gross receipts is treated as taxable income
+                </li>
+                <li>No need to maintain books of accounts</li>
+                <li>Cannot carry forward business losses</li>
+                <li className="text-white/80 font-medium mt-2">
+                  Best for: Most freelancers, consultants, small professionals
+                </li>
+              </ul>
+              <div className="mt-3 p-3 rounded-xl border border-amber-500/30 bg-amber-500/5">
+                <div className="flex items-start gap-2">
+                  <Lightbulb className="w-3.5 h-3.5 text-amber-400 mt-0.5 shrink-0" />
+                  <p className="text-xs text-amber-300/80">
+                    Your effective tax rate on gross income is just ~15% under
+                    new regime at &#8377;20L turnover
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ITR-3 */}
+        <div
+          className={`rounded-2xl border text-left transition-all ${
             itrForm === "ITR-3"
-              ? "border-indigo-500 bg-indigo-500/10"
+              ? "border-blue-500 bg-blue-500/10"
               : "border-white/10 bg-white/5 hover:bg-white/10"
           }`}
         >
-          <div className="flex items-start gap-4">
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold ${
-                itrForm === "ITR-3"
-                  ? "bg-indigo-500 text-white"
-                  : "bg-white/10 text-white/50"
-              }`}
-            >
-              3
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-white">
-                ITR-3 (Full P&L Accounting)
-              </p>
-              <p className="text-xs text-white/50 mt-1 leading-relaxed">
-                Full profit & loss accounting.
-                <br />
-                Carry forward business losses.
-                <br />
-                For turnover above Rs 75L or if you want to claim all expenses.
-              </p>
-            </div>
-            {itrForm === "ITR-3" && (
-              <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center">
-                <Check className="w-3.5 h-3.5 text-white" />
+          <button
+            onClick={() => setItrForm("ITR-3")}
+            className="w-full p-5 text-left"
+          >
+            <div className="flex items-start gap-4">
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 ${
+                  itrForm === "ITR-3"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white/10 text-white/50"
+                }`}
+              >
+                3
               </div>
-            )}
-          </div>
-        </button>
+              <div className="flex-1">
+                <p className="font-semibold text-white">
+                  ITR-3 (Business/Profession)
+                </p>
+                <p className="text-xs text-white/50 mt-1">
+                  Full profit & loss accounting under regular provisions
+                </p>
+              </div>
+              {itrForm === "ITR-3" && (
+                <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center shrink-0">
+                  <Check className="w-3.5 h-3.5 text-white" />
+                </div>
+              )}
+            </div>
+          </button>
+
+          <button
+            onClick={() =>
+              setExpandedForm(expandedForm === "ITR-3" ? null : "ITR-3")
+            }
+            className="w-full px-5 pb-3 flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            <ChevronDown
+              className={`w-3 h-3 transition-transform duration-300 ${
+                expandedForm === "ITR-3" ? "rotate-180" : ""
+              }`}
+            />
+            Learn More
+          </button>
+
+          {expandedForm === "ITR-3" && (
+            <div className="px-5 pb-5 animate-fade-in">
+              <ul className="space-y-1.5 text-xs text-white/60 leading-relaxed">
+                <li>
+                  Claim ALL actual business expenses — rent, travel, equipment,
+                  software
+                </li>
+                <li>Carry forward business losses for up to 8 years</li>
+                <li>
+                  Required if turnover exceeds &#8377;75 lakhs
+                </li>
+                <li>Required for F&O/intraday trading income</li>
+                <li>
+                  Tax audit required if turnover &gt; &#8377;1 crore (&#8377;10
+                  crore for digital)
+                </li>
+                <li className="text-white/80 font-medium mt-2">
+                  Best for: High-expense professionals, traders, turnover &gt;
+                  &#8377;75L
+                </li>
+              </ul>
+              <div className="mt-3 p-3 rounded-xl border border-amber-500/30 bg-amber-500/5">
+                <div className="flex items-start gap-2">
+                  <Lightbulb className="w-3.5 h-3.5 text-amber-400 mt-0.5 shrink-0" />
+                  <p className="text-xs text-amber-300/80">
+                    If your actual expenses exceed 50% of income, ITR-3 saves
+                    you more than presumptive
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -542,7 +728,7 @@ function OnboardingInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         maxLength={maxLength}
-        className={`w-full px-4 py-3.5 bg-white/5 border rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all ${
+        className={`w-full px-4 py-3.5 bg-white/5 border rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
           mono ? "font-mono tracking-wider uppercase" : ""
         } ${error ? "border-red-500/50" : "border-white/10"}`}
       />

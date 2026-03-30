@@ -127,10 +127,10 @@ export default function SettingsPage() {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 tracking-tight">
+      <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 tracking-tight">
         Settings
       </h2>
-      <p className="text-gray-500 text-sm mb-8">
+      <p className="text-slate-500 text-sm mb-8">
         Manage your profile, tax regime, and ITR form preferences.
       </p>
 
@@ -138,10 +138,10 @@ export default function SettingsPage() {
         {/* Profile */}
         <div className="glass-card rounded-2xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-              <User className="w-5 h-5 text-indigo-600" />
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+              <User className="w-5 h-5 text-blue-600" />
             </div>
-            <h3 className="font-semibold text-gray-900">Your Profile</h3>
+            <h3 className="font-semibold text-slate-900">Your Profile</h3>
           </div>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -229,7 +229,7 @@ export default function SettingsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">
+              <label className="block text-xs font-medium text-slate-500 mb-1.5">
                 Profession
               </label>
               <select
@@ -237,7 +237,7 @@ export default function SettingsPage() {
                 onChange={(e) =>
                   setProfile({ ...profile, profession: e.target.value })
                 }
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="freelancer">
                   Freelancer / Independent Contractor
@@ -256,7 +256,7 @@ export default function SettingsPage() {
             <button
               onClick={handleSaveProfile}
               disabled={hasErrors}
-              className="w-full px-4 py-3 bg-gray-900 text-white rounded-2xl text-sm font-semibold hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full px-4 py-3 bg-blue-600 text-white rounded-2xl text-sm font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99]"
             >
               {savedProfile ? (
                 <span className="flex items-center justify-center gap-2">
@@ -273,12 +273,12 @@ export default function SettingsPage() {
         {/* FY Settings */}
         <div className="space-y-6">
           <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-gray-900 mb-5">
+            <h3 className="font-semibold text-slate-900 mb-5">
               Financial Year
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                <label className="block text-xs font-medium text-slate-500 mb-1.5">
                   Financial Year
                 </label>
                 <select
@@ -286,7 +286,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setSettings({ ...settings, fy: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="2025-26">FY 2025-26 (AY 2026-27)</option>
                   <option value="2024-25">FY 2024-25 (AY 2025-26)</option>
@@ -294,7 +294,7 @@ export default function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-2">
+                <label className="block text-xs font-medium text-slate-500 mb-2">
                   Tax Regime
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -306,14 +306,14 @@ export default function SettingsPage() {
                       }
                       className={`p-4 rounded-2xl border text-left transition-all ${
                         settings.regime === r
-                          ? "border-indigo-500 bg-indigo-50/50 shadow-sm"
-                          : "border-gray-200 hover:border-gray-300"
+                          ? "border-blue-500 bg-blue-50/50 shadow-sm"
+                          : "border-slate-200 hover:border-slate-300"
                       }`}
                     >
-                      <p className="font-medium text-sm text-gray-900">
+                      <p className="font-medium text-sm text-slate-900">
                         {r === "new" ? "New" : "Old"} Regime
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-slate-500 mt-1">
                         {r === "new"
                           ? "Lower rates, fewer deductions"
                           : "Higher rates, more deductions"}
@@ -324,7 +324,7 @@ export default function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-2">
+                <label className="block text-xs font-medium text-slate-500 mb-2">
                   ITR Form
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -344,14 +344,14 @@ export default function SettingsPage() {
                       }
                       className={`p-4 rounded-2xl border text-left transition-all ${
                         settings.itr_form === form
-                          ? "border-indigo-500 bg-indigo-50/50 shadow-sm"
-                          : "border-gray-200 hover:border-gray-300"
+                          ? "border-blue-500 bg-blue-50/50 shadow-sm"
+                          : "border-slate-200 hover:border-slate-300"
                       }`}
                     >
-                      <p className="font-medium text-sm text-gray-900">
+                      <p className="font-medium text-sm text-slate-900">
                         {form}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">{desc}</p>
+                      <p className="text-xs text-slate-500 mt-1">{desc}</p>
                     </button>
                   ))}
                 </div>
@@ -359,7 +359,7 @@ export default function SettingsPage() {
 
               <button
                 onClick={handleSaveFY}
-                className="w-full px-4 py-3 bg-gray-900 text-white rounded-2xl text-sm font-semibold hover:bg-gray-800 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                className="w-full px-4 py-3 bg-blue-600 text-white rounded-2xl text-sm font-semibold hover:bg-blue-700 transition-all hover:scale-[1.01] active:scale-[0.99]"
               >
                 {savedFY ? (
                   <span className="flex items-center justify-center gap-2">
@@ -374,13 +374,13 @@ export default function SettingsPage() {
           </div>
 
           <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-gray-900 mb-2">
+            <h3 className="font-semibold text-slate-900 mb-2">
               About FreeFile
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-slate-600">
               Local-first ITR filing app for Indian freelancers.
             </p>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-slate-400 mt-2">
               All data stored locally. Nothing sent to any server.
             </p>
           </div>
@@ -411,7 +411,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-500 mb-1.5">
+      <label className="block text-xs font-medium text-slate-500 mb-1.5">
         {label}
       </label>
       <input
@@ -420,9 +420,9 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}
         onBlur={onBlur}
-        className={`w-full px-4 py-2.5 bg-gray-50 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${
+        className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
           mono ? "font-mono tracking-wider uppercase" : ""
-        } ${error ? "border-red-400" : "border-gray-200"}`}
+        } ${error ? "border-red-400" : "border-slate-200"}`}
       />
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
     </div>

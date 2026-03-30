@@ -48,7 +48,7 @@ export default function CapitalGainsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
   }
@@ -56,26 +56,26 @@ export default function CapitalGainsPage() {
   if (error || !data) {
     return (
       <div className="animate-fade-in">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 tracking-tight">
           Capital Gains
         </h2>
-        <p className="text-gray-500 text-sm mb-8">
+        <p className="text-slate-500 text-sm mb-8">
           FY 2025-26 capital gains from equity, F&O, and other investments.
         </p>
         <div className="glass-card rounded-2xl p-16 text-center max-w-lg mx-auto">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center">
             <Upload className="w-7 h-7 text-white" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900">
+          <h3 className="text-xl font-semibold text-slate-900">
             No capital gains data
           </h3>
-          <p className="mt-2 text-sm text-gray-500 max-w-sm mx-auto">
+          <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto">
             Upload your trading P&L reports from Zerodha, Groww, or INDmoney to
             see your capital gains breakdown.
           </p>
           <a
             href="/upload"
-            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-2xl text-sm font-medium hover:bg-gray-800 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl text-sm font-medium hover:bg-blue-700 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             Upload Trading Report
             <ArrowRight className="w-4 h-4" />
@@ -90,7 +90,7 @@ export default function CapitalGainsPage() {
       label: "STCG 111A",
       value: data.stcg_111a,
       desc: "Listed equity (15%)",
-      color: "from-blue-500 to-indigo-600",
+      color: "from-blue-500 to-blue-600",
     },
     {
       label: "LTCG 112A",
@@ -137,10 +137,10 @@ export default function CapitalGainsPage() {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 tracking-tight">
+      <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 tracking-tight">
         Capital Gains
       </h2>
-      <p className="text-gray-500 text-sm mb-8">
+      <p className="text-slate-500 text-sm mb-8">
         FY 2025-26 capital gains from equity, F&O, and other investments.
       </p>
 
@@ -151,13 +151,13 @@ export default function CapitalGainsPage() {
             key={card.label}
             className="glass-card rounded-2xl p-4 hover:scale-[1.02] transition-all"
           >
-            <p className="text-xs font-medium text-gray-500">{card.label}</p>
+            <p className="text-xs font-medium text-slate-500">{card.label}</p>
             <p
-              className={`text-lg font-bold mt-1 ${card.value >= 0 ? "text-gray-900" : "text-red-600"}`}
+              className={`text-lg font-bold mt-1 ${card.value >= 0 ? "text-slate-900" : "text-red-600"}`}
             >
               {formatCurrency(card.value)}
             </p>
-            <p className="text-[10px] text-gray-400 mt-1">{card.desc}</p>
+            <p className="text-[10px] text-slate-400 mt-1">{card.desc}</p>
             <div
               className={`mt-2 h-0.5 rounded-full bg-gradient-to-r ${card.color} opacity-50`}
             />
@@ -172,10 +172,10 @@ export default function CapitalGainsPage() {
             <TrendingUp className="w-5 h-5 text-emerald-600" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-900">
+            <p className="text-sm font-semibold text-slate-900">
               Dividend Income: {formatCurrency(data.dividends)}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-slate-500">
               Taxable under &quot;Income from Other Sources&quot;
             </p>
           </div>
@@ -186,7 +186,7 @@ export default function CapitalGainsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {Object.keys(data.loss_setoff).length > 0 && (
           <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-amber-500" />
               Loss Set-off
             </h3>
@@ -194,9 +194,9 @@ export default function CapitalGainsPage() {
               {Object.entries(data.loss_setoff).map(([key, value]) => (
                 <div
                   key={key}
-                  className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
+                  className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0"
                 >
-                  <span className="text-sm text-gray-600 capitalize">
+                  <span className="text-sm text-slate-600 capitalize">
                     {key.replace(/_/g, " ")}
                   </span>
                   <span className="text-sm font-medium text-red-600">
@@ -210,7 +210,7 @@ export default function CapitalGainsPage() {
 
         {Object.keys(data.carry_forward).length > 0 && (
           <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
               <TrendingDown className="w-4 h-4 text-blue-500" />
               Carry-Forward Losses
             </h3>
@@ -218,12 +218,12 @@ export default function CapitalGainsPage() {
               {Object.entries(data.carry_forward).map(([key, value]) => (
                 <div
                   key={key}
-                  className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
+                  className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0"
                 >
-                  <span className="text-sm text-gray-600 capitalize">
+                  <span className="text-sm text-slate-600 capitalize">
                     {key.replace(/_/g, " ")}
                   </span>
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-sm font-medium text-slate-900">
                     {formatCurrency(value)}
                   </span>
                 </div>
@@ -237,45 +237,45 @@ export default function CapitalGainsPage() {
       {sortedTrades.length > 0 && (
         <div className="glass-card rounded-2xl overflow-hidden">
           <div className="p-6 pb-3">
-            <h3 className="font-semibold text-gray-900">
+            <h3 className="font-semibold text-slate-900">
               Individual Trades ({sortedTrades.length})
             </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100">
+                <tr className="border-b border-slate-100">
                   <th className="px-6 py-3 text-left">
                     <button
                       onClick={() => toggleSort("symbol")}
-                      className="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700"
+                      className="flex items-center gap-1 text-xs font-medium text-slate-500 uppercase tracking-wider hover:text-slate-700"
                     >
                       Symbol
                       <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Buy Date
                   </th>
                   <th className="px-4 py-3 text-left">
                     <button
                       onClick={() => toggleSort("sell_date")}
-                      className="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700"
+                      className="flex items-center gap-1 text-xs font-medium text-slate-500 uppercase tracking-wider hover:text-slate-700"
                     >
                       Sell Date
                       <ArrowUpDown className="w-3 h-3" />
                     </button>
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Buy Value
                   </th>
                   <th className="px-4 py-3 text-right">
                     <button
                       onClick={() => toggleSort("sell_value")}
-                      className="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 ml-auto"
+                      className="flex items-center gap-1 text-xs font-medium text-slate-500 uppercase tracking-wider hover:text-slate-700 ml-auto"
                     >
                       Sell Value
                       <ArrowUpDown className="w-3 h-3" />
@@ -284,7 +284,7 @@ export default function CapitalGainsPage() {
                   <th className="px-6 py-3 text-right">
                     <button
                       onClick={() => toggleSort("gain")}
-                      className="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 ml-auto"
+                      className="flex items-center gap-1 text-xs font-medium text-slate-500 uppercase tracking-wider hover:text-slate-700 ml-auto"
                     >
                       Gain/Loss
                       <ArrowUpDown className="w-3 h-3" />
@@ -296,9 +296,9 @@ export default function CapitalGainsPage() {
                 {sortedTrades.map((trade, i) => (
                   <tr
                     key={i}
-                    className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
+                    className="border-b border-slate-50 hover:bg-blue-50/50 transition-colors"
                   >
-                    <td className="px-6 py-3 font-medium text-gray-900">
+                    <td className="px-6 py-3 font-medium text-slate-900">
                       {trade.symbol}
                     </td>
                     <td className="px-4 py-3">
@@ -312,16 +312,16 @@ export default function CapitalGainsPage() {
                         {trade.type}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3 text-slate-600">
                       {formatDate(trade.buy_date)}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3 text-slate-600">
                       {formatDate(trade.sell_date)}
                     </td>
-                    <td className="px-4 py-3 text-right text-gray-600">
+                    <td className="px-4 py-3 text-right text-slate-600">
                       {formatCurrency(trade.buy_value)}
                     </td>
-                    <td className="px-4 py-3 text-right text-gray-600">
+                    <td className="px-4 py-3 text-right text-slate-600">
                       {formatCurrency(trade.sell_value)}
                     </td>
                     <td

@@ -35,7 +35,7 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
       </head>
-      <body className="min-h-full bg-[#f5f5f7]">
+      <body className="min-h-full bg-[#f0f4ff]">
         <ToastProvider>
           <AppShell>{children}</AppShell>
         </ToastProvider>

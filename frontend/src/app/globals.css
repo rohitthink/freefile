@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f9fafb;
-  --foreground: #111827;
-  --sidebar-bg: #111111;
+  --background: #f0f4ff;
+  --foreground: #1e293b;
+  --sidebar-bg: #1e3a5f;
   --sidebar-text: #e5e7eb;
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.4);
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.2);
+  --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(147, 197, 253, 0.3);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -217,10 +217,10 @@ body {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(147, 197, 253, 0.3);
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.05),
     0 2px 4px -2px rgba(0, 0, 0, 0.05);
@@ -259,7 +259,7 @@ body {
 
 /* Onboarding gradient background */
 .onboarding-bg {
-  background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #3b82f6 100%);
   background-size: 200% 200%;
   animation: gradient-shift 8s ease infinite;
 }
@@ -284,7 +284,7 @@ body {
 
 /* Drag & drop zone animated border */
 .drop-zone-active {
-  background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa, #6366f1);
+  background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
   background-size: 300% 300%;
   animation: border-dance 1.5s linear infinite;
 }

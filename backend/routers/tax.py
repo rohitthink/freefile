@@ -474,17 +474,42 @@ async def get_capital_gains(fy: str = Query("2025-26")):
                 "losses_to_carry": [], "income_at_slab_rate": 0,
             }
 
+        # Build loss_setoff dict from carry_forward_applied
+        loss_setoff = cg_summary.get("carry_forward_applied", {})
+
+        # Convert losses_to_carry array to dict keyed by loss_type
+        carry_forward = {
+            item["loss_type"]: item["amount"]
+            for item in cg_summary.get("losses_to_carry", [])
+        }
+
+        # Map trade fields to match frontend CapitalGainsTrade type
+        trades = [
+            {
+                "symbol": t.get("scrip_name", ""),
+                "isin": t.get("isin", ""),
+                "buy_date": t.get("buy_date", ""),
+                "sell_date": t.get("sell_date", ""),
+                "buy_value": t.get("buy_value", 0),
+                "sell_value": t.get("sell_value", 0),
+                "gain": t.get("gain_loss", 0),
+                "type": t.get("gain_type", ""),
+                "source": t.get("source", ""),
+            }
+            for t in entries
+        ]
+
         return {
-            "fy": fy,
-            "total_trades": len(entries),
-            "capital_gains": cg_summary,
-            "dividends": {
-                "total_amount": round(total_dividends, 2),
-                "total_tds": round(total_dividend_tds, 2),
-                "entries": dividends,
-            },
-            "trades": entries,
-            "carry_forward_losses": cf_losses,
+            "stcg_111a": cg_summary.get("stcg_111a", 0),
+            "ltcg_112a": cg_summary.get("ltcg_112a", 0),
+            "ltcg_112": cg_summary.get("ltcg_112", 0),
+            "stcg_slab": cg_summary.get("income_at_slab_rate", 0),
+            "fno": cg_summary.get("fno_business", 0),
+            "speculative": cg_summary.get("speculative", 0),
+            "dividends": round(total_dividends, 2),
+            "loss_setoff": loss_setoff,
+            "carry_forward": carry_forward,
+            "trades": trades,
         }
 
     finally:

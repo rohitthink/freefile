@@ -39,7 +39,7 @@ import {
 import { useAppStore } from "@/lib/store";
 
 const PIE_COLORS = [
-  "#6366f1",
+  "#3b82f6",
   "#22c55e",
   "#f59e0b",
   "#ec4899",
@@ -118,7 +118,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
   }
@@ -155,11 +155,11 @@ export default function Dashboard() {
     <div className="animate-fade-in">
       {/* Greeting */}
       <div className="mb-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">
           {greeting()}
           {displayName ? `, ${displayName}` : ""}
         </h2>
-        <p className="text-gray-500 mt-1 text-sm">
+        <p className="text-slate-500 mt-1 text-sm">
           FY 2025-26 | {fySettings?.regime === "old" ? "Old" : "New"} Regime |{" "}
           {fySettings?.itr_form || "ITR-4"}
         </p>
@@ -167,17 +167,17 @@ export default function Dashboard() {
 
       {!hasData ? (
         <div className="glass-card rounded-2xl p-16 text-center max-w-lg mx-auto animate-slide-up">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center">
             <Upload className="w-7 h-7 text-white" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900">No data yet</h3>
-          <p className="mt-2 text-sm text-gray-500 max-w-sm mx-auto">
+          <h3 className="text-xl font-semibold text-slate-900">No data yet</h3>
+          <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto">
             Upload your bank statements to see your income, expenses, and tax
             calculations.
           </p>
           <a
             href="/upload"
-            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-2xl text-sm font-medium hover:bg-gray-800 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl text-sm font-medium hover:bg-blue-700 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             Upload Statement
             <ArrowRight className="w-4 h-4" />
@@ -207,9 +207,9 @@ export default function Dashboard() {
               title="Tax Payable"
               value={tax ? tax.tax_payable : 0}
               icon={<Calculator className="w-5 h-5" />}
-              gradient="from-amber-500 to-orange-600"
-              iconBg="bg-amber-500/10"
-              iconColor="text-amber-600"
+              gradient="from-sky-500 to-blue-600"
+              iconBg="bg-sky-500/10"
+              iconColor="text-sky-600"
             />
             <StatCard
               title="Effective Rate"
@@ -222,7 +222,7 @@ export default function Dashboard() {
               }
               suffix="%"
               icon={<FileText className="w-5 h-5" />}
-              gradient="from-blue-500 to-indigo-600"
+              gradient="from-blue-500 to-blue-600"
               iconBg="bg-blue-500/10"
               iconColor="text-blue-600"
               noPrefix
@@ -233,16 +233,16 @@ export default function Dashboard() {
           {comparison && comparison.savings > 0 && (
             <div className="glass-card rounded-2xl p-5 mb-6 flex items-center justify-between animate-slide-up">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-slate-900">
                     Switch to{" "}
                     {comparison.recommended === "new" ? "New" : "Old"} Regime to
                     save {formatCurrency(comparison.savings)}
                   </p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     Old: {formatCurrency(comparison.old_regime.tax_payable)} vs
                     New: {formatCurrency(comparison.new_regime.tax_payable)}
                   </p>
@@ -250,7 +250,7 @@ export default function Dashboard() {
               </div>
               <a
                 href="/tax"
-                className="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+                className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1"
               >
                 Details
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -283,8 +283,8 @@ export default function Dashboard() {
                   onClick={action.onClick}
                   className="glass-card rounded-2xl p-4 flex items-center gap-3 hover:scale-[1.02] transition-all active:scale-[0.98] cursor-pointer"
                 >
-                  <Icon className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <Icon className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm font-medium text-slate-700">
                     {action.label}
                   </span>
                 </a>
@@ -296,7 +296,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {monthlyData.length > 0 && (
               <div className="glass-card rounded-2xl p-6 animate-slide-up">
-                <h3 className="font-semibold text-gray-900 mb-4">
+                <h3 className="font-semibold text-slate-900 mb-4">
                   Monthly Income vs Expenses
                 </h3>
                 <ResponsiveContainer width="100%" height={280}>
@@ -353,7 +353,7 @@ export default function Dashboard() {
 
             {incomePieData.length > 0 && (
               <div className="glass-card rounded-2xl p-6 animate-slide-up">
-                <h3 className="font-semibold text-gray-900 mb-4">
+                <h3 className="font-semibold text-slate-900 mb-4">
                   Income Sources
                 </h3>
                 <ResponsiveContainer width="100%" height={280}>
@@ -384,7 +384,7 @@ export default function Dashboard() {
                       verticalAlign="bottom"
                       height={36}
                       formatter={(value: string) => (
-                        <span className="text-xs text-gray-600 capitalize">
+                        <span className="text-xs text-slate-600 capitalize">
                           {value}
                         </span>
                       )}
@@ -401,7 +401,7 @@ export default function Dashboard() {
           {/* Tax Breakdown + Expense Breakdown */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="glass-card rounded-2xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">
+              <h3 className="font-semibold text-slate-900 mb-4">
                 Tax Breakdown (
                 {tax?.regime === "new" ? "New" : "Old"} Regime)
               </h3>
@@ -463,7 +463,7 @@ export default function Dashboard() {
                       value={`-${formatCurrency(tax.advance_tax_paid)}`}
                     />
                   )}
-                  <div className="border-t border-gray-200 pt-2 mt-2">
+                  <div className="border-t border-slate-200 pt-2 mt-2">
                     {tax.tax_payable > 0 ? (
                       <TaxRow
                         label="Tax Payable"
@@ -483,7 +483,7 @@ export default function Dashboard() {
             </div>
 
             <div className="glass-card rounded-2xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">
+              <h3 className="font-semibold text-slate-900 mb-4">
                 Expense Breakdown
               </h3>
               {summary &&
@@ -493,23 +493,23 @@ export default function Dashboard() {
                   .map(([cat, data]) => (
                     <div
                       key={cat}
-                      className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0"
+                      className="flex justify-between items-center py-2.5 border-b border-slate-100 last:border-0"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600 capitalize">
+                        <span className="text-sm text-slate-600 capitalize">
                           {cat.replace(/_/g, " ")}
                         </span>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-slate-400">
                           {data.count} txns
                         </span>
                       </div>
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-slate-900">
                         {formatCurrency(data.total)}
                       </span>
                     </div>
                   ))
               ) : (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-slate-500">
                   No categorized expenses yet.
                 </p>
               )}
@@ -543,12 +543,12 @@ function StatCard({
   return (
     <div className="glass-card rounded-2xl p-5 hover:scale-[1.02] transition-all duration-300">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-sm text-gray-500 font-medium">{title}</p>
+        <p className="text-sm text-slate-500 font-medium">{title}</p>
         <div className={`w-9 h-9 rounded-xl ${iconBg} flex items-center justify-center ${iconColor}`}>
           {icon}
         </div>
       </div>
-      <p className="text-2xl font-bold text-gray-900">
+      <p className="text-2xl font-bold text-slate-900">
         {noPrefix ? (
           <>
             <AnimatedNumber value={value} />
@@ -578,12 +578,12 @@ function TaxRow({
   return (
     <div className="flex justify-between items-center">
       <span
-        className={`text-sm ${bold ? "font-semibold text-gray-900" : "text-gray-600"}`}
+        className={`text-sm ${bold ? "font-semibold text-slate-900" : "text-slate-600"}`}
       >
         {label}
       </span>
       <span
-        className={`text-sm ${bold ? "font-semibold text-gray-900" : "text-gray-700"}`}
+        className={`text-sm ${bold ? "font-semibold text-slate-900" : "text-slate-700"}`}
       >
         {value}
       </span>

@@ -50,7 +50,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="fixed top-0 left-0 right-0 h-14 bg-[#111] flex items-center px-4 z-30 md:hidden">
+      <div className="fixed top-0 left-0 right-0 h-14 bg-[#1e3a5f] flex items-center px-4 z-30 md:hidden">
         <button
           onClick={() => setOpen(!open)}
           className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
@@ -76,7 +76,7 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <nav
-        className={`w-64 bg-[#111] flex flex-col fixed h-full z-20 transition-transform duration-300 ease-out
+        className={`w-64 bg-[#1e3a5f] flex flex-col fixed h-full z-20 transition-transform duration-300 ease-out
         ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         {/* Logo + User */}
@@ -84,22 +84,22 @@ export default function Sidebar() {
           <h1 className="text-xl font-bold text-white tracking-tight">
             FreeFile
           </h1>
-          <p className="text-xs text-gray-500 mt-1 tracking-wide">
+          <p className="text-xs text-blue-200/60 mt-1 tracking-wide">
             ITR Filing for Freelancers
           </p>
         </div>
 
         {/* User avatar */}
         <div className="px-6 pb-4">
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white text-xs font-bold">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">
                 {mounted && userName ? userName : "User"}
               </p>
-              <p className="text-xs text-gray-500">FY 2025-26</p>
+              <p className="text-xs text-blue-200/60">FY 2025-26</p>
             </div>
           </div>
         </div>
@@ -119,20 +119,20 @@ export default function Sidebar() {
                 onClick={() => setOpen(false)}
                 className={`flex items-center gap-3 px-4 py-2.5 mb-0.5 text-sm rounded-xl transition-all duration-200 group ${
                   active
-                    ? "bg-white/10 text-white font-medium shadow-[0_0_20px_rgba(99,102,241,0.15)]"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    ? "bg-white/15 text-white font-medium shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+                    : "text-gray-400 hover:text-white hover:bg-white/10"
                 }`}
               >
                 <div className="relative">
                   <Icon
                     className={`w-[18px] h-[18px] transition-colors ${
                       active
-                        ? "text-indigo-400"
+                        ? "text-sky-300"
                         : "text-gray-500 group-hover:text-gray-300"
                     }`}
                   />
                   {active && (
-                    <div className="absolute -left-1 -top-1 w-7 h-7 bg-indigo-500/20 rounded-full blur-md" />
+                    <div className="absolute -left-1 -top-1 w-7 h-7 bg-sky-400/20 rounded-full blur-md" />
                   )}
                 </div>
                 {item.label}
@@ -142,8 +142,8 @@ export default function Sidebar() {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-white/5">
-          <p className="text-[11px] text-gray-600 text-center">
+        <div className="p-4 border-t border-white/10">
+          <p className="text-[11px] text-blue-200/40 text-center">
             Local-only | All data on-device
           </p>
         </div>
