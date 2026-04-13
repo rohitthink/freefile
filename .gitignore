@@ -16,5 +16,21 @@ dist/
 src-tauri/target/
 src-tauri/binaries/freefile-backend-*
 
+# Logs
+*.log
+logs/
+
+# Editor
+.vscode/
+.idea/
+
+# Environment variants
+.env.*
+
+# Signing keys
+*.keystore
+*.jks
+
 # OS
 .DS_Store
+Thumbs.db

@@ -12,6 +12,12 @@ cd freefile
 bash scripts/dev.sh    # or: make dev
 ```
 
+## Open Source
+- License: AGPL-3.0
+- Repo: https://github.com/rohitthink/freefile
+- Contributors welcome — see CONTRIBUTING.md
+- CI runs py_compile + tsc + pytest on every PR
+
 ## Bug Checking Rule
 After writing or editing ANY code file, always run:
 - **Python**: `source venv/bin/activate && python -m py_compile <file>` for each changed .py file
