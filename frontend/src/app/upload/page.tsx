@@ -29,7 +29,7 @@ export default function UploadPage() {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 tracking-tight">
+      <h2 className="text-3xl md:text-4xl font-bold text-slate-foreground mb-2 tracking-tight">
         Upload
       </h2>
       <p className="text-slate-500 text-sm mb-8">
@@ -37,7 +37,7 @@ export default function UploadPage() {
       </p>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-blue-50 rounded-2xl max-w-md mb-8">
+      <div className="flex gap-1 p-1 bg-blue-50 dark:bg-slate-800 dark:bg-slate-800 rounded-2xl max-w-md mb-8">
         {([
           { key: "bank" as TabType, label: "Bank Statement" },
           { key: "form26as" as TabType, label: "Form 26AS" },
@@ -48,7 +48,7 @@ export default function UploadPage() {
             onClick={() => setActiveTab(tab.key)}
             className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-xl transition-all ${
               activeTab === tab.key
-                ? "bg-white text-slate-900 shadow-sm"
+                ? "bg-card text-slate-foreground shadow-sm"
                 : "text-slate-500 hover:text-slate-700"
             }`}
           >
@@ -63,7 +63,7 @@ export default function UploadPage() {
 
       {/* Supported banks */}
       <div className="mt-10 max-w-2xl">
-        <h3 className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">
+        <h3 className="text-xs font-semibold text-slate-400  mb-3 uppercase tracking-wider">
           Supported Banks
         </h3>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
@@ -72,7 +72,7 @@ export default function UploadPage() {
               key={bank}
               className="glass-card rounded-xl p-3 text-center hover:scale-[1.03] transition-transform"
             >
-              <span className="text-sm font-medium text-slate-700">{bank}</span>
+       <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{bank}</span>
             </div>
           ))}
         </div>
@@ -199,7 +199,7 @@ function BankUploader() {
           className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all cursor-pointer
             ${
               dragOver
-                ? "border-blue-400 bg-blue-50/50"
+                ? "border-blue-400 bg-blue-50 dark:bg-slate-800/50"
                 : "border-gray-200 hover:border-gray-300 hover:bg-gray-50/50"
             }`}
           onClick={() => document.getElementById("file-input")?.click()}
@@ -208,7 +208,7 @@ function BankUploader() {
             <div className="absolute inset-0 rounded-2xl drop-zone-active opacity-20" />
           )}
 
-          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-blue-50 flex items-center justify-center">
+          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-blue-50 dark:bg-slate-800 flex items-center justify-center">
             <Upload className="w-6 h-6 text-blue-400" />
           </div>
           <p className="text-sm font-medium text-slate-700">
@@ -240,11 +240,11 @@ function BankUploader() {
             {files.map((f, i) => (
               <div
                 key={`${f.name}-${i}`}
-                className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-xl"
               >
                 {getFileIcon(f.name)}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-900 truncate">
+                  <p className="text-sm font-medium text-slate-foreground truncate">
                     {f.name}
                   </p>
                   <p className="text-xs text-slate-400">
@@ -287,7 +287,7 @@ function BankUploader() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Leave blank if not encrypted"
-            className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 bg- border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-foreground placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           />
         </div>
 
@@ -392,7 +392,7 @@ function Form26ASUploader() {
   return (
     <div className="max-w-2xl">
       <div className="glass-card rounded-2xl p-8">
-        <h3 className="font-semibold text-slate-900 mb-2">
+        <h3 className="font-semibold text-slate-foreground mb-2">
           Import Form 26AS
         </h3>
         <p className="text-sm text-slate-500 mb-4">
@@ -412,15 +412,17 @@ function Form26ASUploader() {
 
         {showInfo && (
           <div className="mb-6 space-y-3 animate-fade-in">
-            <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100">
-              <p className="font-semibold text-sm text-slate-800 mb-2">What is Form 26AS?</p>
-              <p className="text-xs text-slate-600 leading-relaxed">
+            <div className="p-4 rounded-2xl bg-blue-50 dark:bg-slate-800 border border-blue-100">
+         <p className="font-semibold text-sm text-slate-800 dark:text-slate-100 mb-2">
+  What is Form 26AS?
+</p>
+              <p className="text-xs text-slate-600  dark:text-slate-100 leading-relaxed">
                 Form 26AS is your <strong>Annual Tax Statement</strong> maintained by the Income Tax Department.
                 It&apos;s a consolidated record of all taxes paid on your behalf during the financial year.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 dark:border-slate-700">
               <p className="font-semibold text-sm text-slate-800 mb-2">What does it contain?</p>
               <ul className="space-y-1.5 text-xs text-slate-600 leading-relaxed">
                 <li><strong>Part A</strong> — TDS on salary, professional fees, rent, interest (from employers, clients, banks)</li>
@@ -473,7 +475,13 @@ function Form26ASUploader() {
               type="file"
               accept=".pdf"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="w-full text-sm text-slate-700 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:bg-blue-50 file:text-slate-700 hover:file:bg-blue-100 file:transition-colors file:cursor-pointer"
+            className="
+w-full text-sm text-slate-700 bg-white dark:bg-slate-800
+file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0
+file:text-sm file:bg-blue-50 file:text-slate-700
+hover:file:bg-blue-100 dark:file:bg-slate-700 dark:file:text-slate-200
+dark:hover:file:bg-slate-600 file:transition-colors file:cursor-pointer
+"
             />
           </div>
           <div>
@@ -485,7 +493,7 @@ function Form26ASUploader() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="e.g. 15061990"
-              className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-2.5 bg- border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-foreground placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
           </div>
           <button
@@ -601,7 +609,7 @@ function TradingUploader() {
   return (
     <div className="max-w-2xl">
       <div className="glass-card rounded-2xl p-8">
-        <h3 className="font-semibold text-slate-900 mb-2">
+        <h3 className="font-semibold text-slate-foreground mb-2">
           Import Trading Reports
         </h3>
         <p className="text-sm text-slate-500 mb-6">
@@ -621,7 +629,7 @@ function TradingUploader() {
                   className={`py-2.5 px-3 rounded-xl text-sm font-medium transition-all ${
                     source === s.value
                       ? "bg-blue-600 text-white"
-                      : "bg-blue-50 text-slate-600 hover:bg-blue-100"
+                      : "bg-blue-50 dark:bg-slate-800 text-slate-600 hover:bg-blue-100"
                   }`}
                 >
                   {s.label}
@@ -642,7 +650,15 @@ function TradingUploader() {
                 addFiles(e.target.files);
                 e.target.value = "";
               }}
-              className="w-full text-sm text-slate-700 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:bg-blue-50 file:text-slate-700 hover:file:bg-blue-100 file:transition-colors file:cursor-pointer"
+            className="
+w-full text-sm text-slate-700 bg-white dark:bg-slate-800
+file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0
+file:text-sm file:bg-blue-50 file:text-slate-700
+hover:file:bg-blue-100
+dark:file:bg-slate-700 dark:file:text-slate-200
+dark:hover:file:bg-slate-600
+file:transition-colors file:cursor-pointer
+"
             />
           </div>
 
@@ -655,11 +671,11 @@ function TradingUploader() {
               {files.map((f, i) => (
                 <div
                   key={`${f.name}-${i}`}
-                  className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-xl"
                 >
                   {getFileIcon(f.name)}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-900 truncate">
+                    <p className="text-sm font-medium text-slate-foreground truncate">
                       {f.name}
                     </p>
                     <p className="text-xs text-slate-400">

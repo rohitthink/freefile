@@ -71,7 +71,7 @@ export default function CategoriesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Category Overrides</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-200 ">Category Overrides</h2>
         <span className="text-sm text-gray-500">{overrides.length} rules</span>
       </div>
 
@@ -87,8 +87,8 @@ export default function CategoriesPage() {
       )}
 
       {/* Add Rule Form */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
-        <h3 className="text-sm font-medium text-gray-900 mb-3">Add New Rule</h3>
+      <div className="bg-card rounded-xl border border-gray-200 p-4 mb-4">
+        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-200 mb-3">Add New Rule</h3>
         <div className="flex gap-3">
           <input
             type="text"
@@ -101,7 +101,7 @@ export default function CategoriesPage() {
           <select
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-card"
           >
             <option value="">Select category...</option>
             {Object.entries(CATEGORIES).map(([key, label]) => (
@@ -130,7 +130,7 @@ export default function CategoriesPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl border border-gray-200 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center h-32">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900" />
@@ -143,7 +143,7 @@ export default function CategoriesPage() {
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 dark:bg-gray-300 border-b border-gray-200">
               <tr>
                 <th className="text-left px-4 py-3 font-medium text-gray-600">Narration Pattern</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-600">Category</th>
@@ -152,8 +152,8 @@ export default function CategoriesPage() {
             </thead>
             <tbody>
               {filtered.map((o) => (
-                <tr key={o.narration_pattern} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-900 font-mono text-xs">{o.narration_pattern}</td>
+                <tr key={o.narration_pattern} className="border-b border-gray-100 hover:bg-gray-50 hover:bg-gray-100 dark:hover:bg-slate-800/70 ">
+                  <td className="px-4 py-3 text-gray-900 dark:text-gray-200 font-mono text-xs">{o.narration_pattern}</td>
                   <td className="px-4 py-3">
                     <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
                       {CATEGORIES[o.category] || o.category}

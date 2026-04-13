@@ -155,7 +155,7 @@ export default function Dashboard() {
     <div className="animate-fade-in">
       {/* Greeting */}
       <div className="mb-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">
+<h2 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-200">
           {greeting()}
           {displayName ? `, ${displayName}` : ""}
         </h2>

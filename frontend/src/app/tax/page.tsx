@@ -120,15 +120,15 @@ export default function TaxPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Tax Computation</h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-6">Tax Computation</h2>
 
       {/* Regime Comparison */}
       {comparison && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+        <div className="bg-card rounded-xl border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Old vs New Regime Comparison</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-50 ">Old vs New Regime Comparison</h3>
             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-              comparison.recommended === "new" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700"
+              comparison.recommended === "new" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"  : "bg-purple-100 text-purple-700"
             }`}>
               {comparison.recommended === "new" ? "New Regime" : "Old Regime"} saves {formatCurrency(comparison.savings)}
             </span>
@@ -137,9 +137,9 @@ export default function TaxPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left py-2 text-gray-600 font-medium">Component</th>
-                <th className="text-right py-2 text-gray-600 font-medium">Old Regime</th>
-                <th className="text-right py-2 text-gray-600 font-medium">New Regime</th>
+                <th className="text-left py-2 text-gray-600 dark:text-gray-200 font-medium">Component</th>
+                <th className="text-right py-2 text-gray-600 dark:text-gray-200 font-medium">Old Regime</th>
+                <th className="text-right py-2 text-gray-600 dark:text-gray-200 font-medium">New Regime</th>
               </tr>
             </thead>
             <tbody>
@@ -158,11 +158,11 @@ export default function TaxPage() {
               <CompRow label="Total Tax" old={comparison.old_regime.total_tax} new_={comparison.new_regime.total_tax} bold />
               <CompRow label="TDS + Advance Tax" old={comparison.old_regime.tds_credit + comparison.old_regime.advance_tax_paid} new_={comparison.new_regime.tds_credit + comparison.new_regime.advance_tax_paid} />
               <tr className="border-t-2 border-gray-300">
-                <td className="py-2 font-bold text-gray-900">Net Payable</td>
-                <td className={`text-right py-2 font-bold ${comparison.recommended === "old" ? "text-green-700" : "text-gray-900"}`}>
+                <td className="py-2 font-bold text-gray-900 dark:text-gray-50 ">Net Payable</td>
+                <td className={`text-right py-2 font-bold ${comparison.recommended === "old" ? "text-green-700" : "text-gray-900 dark:text-gray-50 "}`}>
                   {comparison.old_regime.tax_payable > 0 ? formatCurrency(comparison.old_regime.tax_payable) : `-${formatCurrency(comparison.old_regime.tax_refund)}`}
                 </td>
-                <td className={`text-right py-2 font-bold ${comparison.recommended === "new" ? "text-green-700" : "text-gray-900"}`}>
+                <td className={`text-right py-2 font-bold ${comparison.recommended === "new" ? "text-green-700" : "text-gray-900 dark:text-gray-50 "}`}>
                   {comparison.new_regime.tax_payable > 0 ? formatCurrency(comparison.new_regime.tax_payable) : `-${formatCurrency(comparison.new_regime.tax_refund)}`}
                 </td>
               </tr>
@@ -173,30 +173,30 @@ export default function TaxPage() {
 
       {/* ITR-3 Expenses Summary or ITR-4 Info */}
       {fySettings && fySettings.itr_form === "ITR-3" && txSummary && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Expenses Summary (ITR-3)</h3>
+        <div className="bg-card rounded-xl border border-gray-200 p-6 mb-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-50  mb-4">Expenses Summary (ITR-3)</h3>
           {(() => {
             const businessExpenses = Object.entries(txSummary.expense_by_category)
               .filter(([cat]) => EXPENSE_CATEGORIES.includes(cat))
               .sort(([, a], [, b]) => b.total - a.total);
             const totalBusinessExpenses = businessExpenses.reduce((sum, [, data]) => sum + data.total, 0);
             if (businessExpenses.length === 0) {
-              return <p className="text-sm text-gray-500">No business expenses categorized yet. Categorize your transactions to see expense breakdown.</p>;
+              return <p className="text-sm text-gray-500 dark:text-gray-300">No business expenses categorized yet. Categorize your transactions to see expense breakdown.</p>;
             }
             return (
               <div className="space-y-2">
                 {businessExpenses.map(([cat, data]) => (
                   <div key={cat} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600 capitalize">{cat.replace(/_/g, " ")}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-200 capitalize">{cat.replace(/_/g, " ")}</span>
                       <span className="text-xs text-gray-400">{data.count} txns</span>
                     </div>
-                    <span className="text-sm font-medium text-gray-900">{formatCurrency(data.total)}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-50 ">{formatCurrency(data.total)}</span>
                   </div>
                 ))}
                 <div className="flex justify-between items-center pt-2 border-t-2 border-gray-300">
-                  <span className="text-sm font-bold text-gray-900">Total Business Expenses</span>
-                  <span className="text-sm font-bold text-gray-900">{formatCurrency(totalBusinessExpenses)}</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-gray-50 ">Total Business Expenses</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-gray-50 ">{formatCurrency(totalBusinessExpenses)}</span>
                 </div>
               </div>
             );
@@ -205,42 +205,42 @@ export default function TaxPage() {
       )}
 
       {fySettings && fySettings.itr_form === "ITR-4" && (
-        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 mb-6 flex items-start gap-3">
+        <div className="rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-900/40 p-4 mb-6 flex items-start gap-3">
           <svg className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-sm font-medium text-blue-900">Presumptive Taxation (44ADA)</p>
-            <p className="text-sm text-blue-700 mt-1">Under Section 44ADA, 50% of professional income is deemed as profit. No expense tracking needed for tax computation.</p>
+            <p className="text-sm font-medium text-blue-900 dark:text-blue-300">Presumptive Taxation (44ADA)</p>
+            <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Under Section 44ADA, 50% of professional income is deemed as profit. No expense tracking needed for tax computation.</p>
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Deductions */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-card rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Deductions (Old Regime)</h3>
-            <button onClick={() => setShowDeductionForm(!showDeductionForm)} className="text-sm text-gray-600 hover:text-gray-900">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-50 ">Deductions (Old Regime)</h3>
+            <button onClick={() => setShowDeductionForm(!showDeductionForm)} className="text-sm text-gray-600  hover:text-gray-900 hover:dark:text-gray-200 ">
               + Add
             </button>
           </div>
 
           {fySettings && fySettings.regime === "new" && (
-            <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3 mb-4 flex items-start gap-2">
-              <svg className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="rounded-lg border border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/60 p-3 mb-4 flex items-start gap-2">
+              <svg className="h-4 w-4 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-xs text-yellow-800">New regime allows very limited deductions (standard deduction only). These deductions apply only under the old regime for comparison purposes.</p>
+              <p className="text-xs text-yellow-800 dark:text-yellow-300 ">New regime allows very limited deductions (standard deduction only). These deductions apply only under the old regime for comparison purposes.</p>
             </div>
           )}
 
           {showDeductionForm && (
-            <div className="mb-4 p-3 bg-gray-50 rounded-lg space-y-2">
+            <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-900  rounded-lg space-y-2">
               <select
                 value={newDeduction.section}
                 onChange={(e) => setNewDeduction({ ...newDeduction, section: e.target.value })}
-                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm bg-white"
+                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm bg-card dark:bg-gray-900"
               >
                 {DEDUCTION_SECTIONS.map((s) => (
                   <option key={s.code} value={s.code}>{s.code} - {s.label} (max {s.limit ? formatCurrency(s.limit) : "No limit"})</option>
@@ -251,7 +251,7 @@ export default function TaxPage() {
                 placeholder="Description (optional)"
                 value={newDeduction.description}
                 onChange={(e) => setNewDeduction({ ...newDeduction, description: e.target.value })}
-                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
+                className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm dark:bg-gray-900"
               />
               <div>
                 <input
@@ -260,26 +260,26 @@ export default function TaxPage() {
                   value={newDeduction.amount}
                   onChange={(e) => setNewDeduction({ ...newDeduction, amount: e.target.value })}
                   onBlur={() => setDeductionTouched((p) => ({ ...p, amount: true }))}
-                  className={`w-full px-2 py-1.5 border rounded text-sm ${deductionTouched.amount && deductionErrors.amount ? "border-red-400" : "border-gray-300"}`}
+                  className={`w-full px-2 py-1.5 border dark:bg-gray-900 rounded text-sm ${deductionTouched.amount && deductionErrors.amount ? "border-red-400" : "border-gray-300"}`}
                 />
                 {deductionTouched.amount && deductionErrors.amount && <p className="text-xs text-red-500 mt-1">{deductionErrors.amount}</p>}
               </div>
-              <button onClick={handleAddDeduction} className="w-full px-3 py-1.5 bg-gray-900 text-white rounded text-sm">Save</button>
+              <button onClick={handleAddDeduction} className="w-full px-3 py-1.5 bg-gray-900 dark:bg-blue-800 text-white rounded text-sm">Save</button>
             </div>
           )}
 
           {deductions.length === 0 ? (
-            <p className="text-sm text-gray-500">No deductions added. Click + Add to claim deductions under old regime.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-300">No deductions added. Click + Add to claim deductions under old regime.</p>
           ) : (
             <div className="space-y-2">
               {deductions.map((d) => (
                 <div key={d.id} className="flex items-center justify-between py-2 border-b border-gray-100">
                   <div>
-                    <span className="text-sm font-medium text-gray-900">{d.section}</span>
-                    {d.description && <span className="text-xs text-gray-500 ml-2">{d.description}</span>}
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-50 ">{d.section}</span>
+                    {d.description && <span className="text-xs text-gray-500 dark:text-gray-300 ml-2">{d.description}</span>}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-900">{formatCurrency(d.amount)}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-50 ">{formatCurrency(d.amount)}</span>
                     <button onClick={() => handleDeleteDeduction(d.id!)} className="text-xs text-red-500 hover:text-red-700">x</button>
                   </div>
                 </div>
@@ -289,19 +289,19 @@ export default function TaxPage() {
         </div>
 
         {/* Advance Tax Schedule */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Advance Tax Schedule</h3>
+        <div className="bg-card rounded-xl border border-gray-200 p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-50  mb-4">Advance Tax Schedule</h3>
           {advanceSchedule.length === 0 ? (
-            <p className="text-sm text-gray-500">No advance tax required (tax liability below 10,000 after TDS).</p>
+            <p className="text-sm text-gray-500 dark:text-gray-300">No advance tax required (tax liability below 10,000 after TDS).</p>
           ) : (
             <div className="space-y-3">
               {advanceSchedule.map((item) => (
                 <div key={item.due_date} className="flex items-center justify-between py-2 border-b border-gray-100">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">By {item.due_date}</p>
-                    <p className="text-xs text-gray-500">Cumulative: {formatCurrency(item.cumulative_amount)}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-50 ">By {item.due_date}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-300">Cumulative: {formatCurrency(item.cumulative_amount)}</p>
                   </div>
-                  <span className="text-sm font-bold text-gray-900">{formatCurrency(item.installment_amount)}</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-gray-50 ">{formatCurrency(item.installment_amount)}</span>
                 </div>
               ))}
             </div>
@@ -310,16 +310,16 @@ export default function TaxPage() {
       </div>
 
       {/* TDS Credits */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 mt-6">
+      <div className="bg-card rounded-xl border border-gray-200 p-6 mt-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-gray-900">TDS Credits (Form 26AS)</h3>
-          <button onClick={() => setShowTdsForm(!showTdsForm)} className="text-sm text-gray-600 hover:text-gray-900">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-50 ">TDS Credits (Form 26AS)</h3>
+          <button onClick={() => setShowTdsForm(!showTdsForm)} className="text-sm text-gray-600 hover:dark:text-gray-200  ">
             + Add TDS Entry
           </button>
         </div>
 
         {showTdsForm && (
-          <div className="mb-4 p-3 bg-gray-50 rounded-lg grid grid-cols-2 gap-2">
+          <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg grid grid-cols-2 gap-2">
             <input type="text" placeholder="Deductor Name" value={newTds.deductor_name}
               onChange={(e) => setNewTds({ ...newTds, deductor_name: e.target.value })}
               className="px-2 py-1.5 border border-gray-300 rounded text-sm" />
@@ -345,7 +345,7 @@ export default function TaxPage() {
               {tdsTouched.tds_deposited && tdsErrors.tds_deposited && <p className="text-xs text-red-500 mt-1">{tdsErrors.tds_deposited}</p>}
             </div>
             <select value={newTds.section} onChange={(e) => setNewTds({ ...newTds, section: e.target.value })}
-              className="px-2 py-1.5 border border-gray-300 rounded text-sm bg-white">
+              className="px-2 py-1.5 border border-gray-300 rounded text-sm bg-card">
               <option value="194J">194J - Professional Fees</option>
               <option value="194C">194C - Contractor Payment</option>
               <option value="194H">194H - Commission</option>
@@ -381,20 +381,20 @@ export default function TaxPage() {
               setTdsTouched({});
               setShowTdsForm(false);
               loadData();
-            }} className="px-3 py-1.5 bg-gray-900 text-white rounded text-sm">Save</button>
+            }} className="px-3 py-1.5 bg-gray-900 dark:bg-blue-800 text-white rounded text-sm">Save</button>
           </div>
         )}
 
         {tdsEntries.length === 0 ? (
-          <p className="text-sm text-gray-500">No TDS entries. Add entries from your Form 26AS.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-300 ">No TDS entries. Add entries from your Form 26AS.</p>
         ) : (
           <table className="w-full text-sm">
             <thead className="border-b border-gray-200">
               <tr>
-                <th className="text-left py-2 text-gray-600 font-medium">Deductor</th>
-                <th className="text-left py-2 text-gray-600 font-medium">Section</th>
-                <th className="text-right py-2 text-gray-600 font-medium">Amount Paid</th>
-                <th className="text-right py-2 text-gray-600 font-medium">TDS</th>
+                <th className="text-left py-2 text-gray-600 dark:text-gray-200  font-medium">Deductor</th>
+                <th className="text-left py-2 text-gray-600 dark:text-gray-200 font-medium">Section</th>
+                <th className="text-right py-2 text-gray-600 dark:text-gray-200 font-medium">Amount Paid</th>
+                <th className="text-right py-2 text-gray-600 dark:text-gray-200 font-medium">TDS</th>
                 <th className="py-2 w-8"></th>
               </tr>
             </thead>
@@ -402,12 +402,12 @@ export default function TaxPage() {
               {tdsEntries.map((t) => (
                 <tr key={t.id} className="border-b border-gray-100">
                   <td className="py-2">
-                    <p className="text-gray-900">{t.deductor_name || "—"}</p>
+                    <p className="text-gray-900 dark:text-gray-50 ">{t.deductor_name || "—"}</p>
                     <p className="text-xs text-gray-400">{t.deductor_tan || ""}</p>
                   </td>
-                  <td className="py-2 text-gray-600">{t.section}</td>
+                  <td className="py-2 text-gray-600 dark:text-gray-200">{t.section}</td>
                   <td className="py-2 text-right text-gray-700">{formatCurrency(t.amount_paid)}</td>
-                  <td className="py-2 text-right font-medium text-gray-900">{formatCurrency(t.tds_deposited)}</td>
+                  <td className="py-2 text-right font-medium text-gray-900 dark:text-gray-50 ">{formatCurrency(t.tds_deposited)}</td>
                   <td className="py-2">
                     <button onClick={async () => {
                       await fetch(`${API}/tax/tds/${t.id}`, { method: "DELETE" });
@@ -417,8 +417,8 @@ export default function TaxPage() {
                 </tr>
               ))}
               <tr className="border-t-2 border-gray-300">
-                <td colSpan={3} className="py-2 font-semibold text-gray-900">Total TDS Credit</td>
-                <td className="py-2 text-right font-bold text-gray-900">{formatCurrency(tdsEntries.reduce((sum, t) => sum + t.tds_deposited, 0))}</td>
+                <td colSpan={3} className="py-2 font-semibold text-gray-900 dark:text-gray-50 ">Total TDS Credit</td>
+                <td className="py-2 text-right font-bold text-gray-900 dark:text-gray-50 ">{formatCurrency(tdsEntries.reduce((sum, t) => sum + t.tds_deposited, 0))}</td>
                 <td></td>
               </tr>
             </tbody>
@@ -432,7 +432,7 @@ export default function TaxPage() {
           onClick={() => {
             window.open(`${API}/export?fy=2025-26`, "_blank");
           }}
-          className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+          className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-50 "
         >
           Export Data (JSON)
         </button>
@@ -444,9 +444,9 @@ export default function TaxPage() {
 function CompRow({ label, old, new_, bold }: { label: string; old: number; new_: number; bold?: boolean }) {
   return (
     <tr className="border-b border-gray-100">
-      <td className={`py-2 ${bold ? "font-semibold text-gray-900" : "text-gray-600"}`}>{label}</td>
-      <td className={`text-right py-2 ${bold ? "font-semibold text-gray-900" : "text-gray-700"}`}>{formatCurrency(old)}</td>
-      <td className={`text-right py-2 ${bold ? "font-semibold text-gray-900" : "text-gray-700"}`}>{formatCurrency(new_)}</td>
+      <td className={`py-2 ${bold ? "font-semibold text-gray-900 dark:text-gray-50 " : "text-gray-600 dark:text-gray-200"}`}>{label}</td>
+      <td className={`text-right py-2 ${bold ? "font-semibold text-gray-900 dark:text-gray-50 " : "text-gray-700 dark:text-gray-100" }`}>{formatCurrency(old)}</td>
+      <td className={`text-right py-2 ${bold ? "font-semibold text-gray-900 dark:text-gray-50 " : "text-gray-700 dark:text-gray-100"}`}>{formatCurrency(new_)}</td>
     </tr>
   );
 }

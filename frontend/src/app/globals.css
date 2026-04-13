@@ -1,16 +1,26 @@
 @import "tailwindcss";
-
+@custom-variant dark (&:where(.dark, .dark *));
 :root {
   --background: #f0f4ff;
   --foreground: #1e293b;
+  --card: #ffffff;
+  --border: #e2e8f0;
   --sidebar-bg: #1e3a5f;
   --sidebar-text: #e5e7eb;
   --accent: #3b82f6;
+  --accent-soft:#ffffff;
   --accent-glow: rgba(59, 130, 246, 0.3);
   --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(147, 197, 253, 0.3);
-}
+}.dark {
+  --background: #0a0a0a;
+  --foreground: #f9fafb;
+  --card: #111827;
+  --border: #0a0a0a;
+  --accent-soft: rgba(59, 130, 246, 0.25);
 
+  
+}
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -224,6 +234,8 @@ body {
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.05),
     0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}.dark .glass-card {
+  background: rgba(17, 24, 39, 0.8);
 }
 
 .glass-card:hover {

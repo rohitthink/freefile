@@ -137,12 +137,12 @@ export default function FilingPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">File ITR</h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">File ITR</h2>
 
       {/* Start Form */}
       {!isRunning && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-lg mb-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Portal Automation</h3>
+        <div className="bg-card rounded-xl border border-gray-200 p-6 max-w-lg mb-6">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Portal Automation</h3>
           <p className="text-sm text-gray-500 mb-4">
             This will open a browser window and navigate the income tax portal.
             You will need to enter your password and OTP manually.
@@ -150,7 +150,7 @@ export default function FilingPage() {
 
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">PAN Number</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">PAN Number</label>
               <input
                 type="text"
                 value={pan}
@@ -163,11 +163,11 @@ export default function FilingPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Assessment Year</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Assessment Year</label>
               <select
                 value={ay}
                 onChange={(e) => setAy(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-card"
               >
                 <option value="2026-27">AY 2026-27 (FY 2025-26)</option>
                 <option value="2025-26">AY 2025-26 (FY 2024-25)</option>
@@ -189,8 +189,8 @@ export default function FilingPage() {
             </button>
           </div>
 
-          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-xs text-yellow-800">
+          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/60 border border-yellow-200 rounded-lg">
+            <p className="text-xs text-yellow-800 dark:text-yellow-300 ">
               <strong>Security:</strong> Your password is never stored or transmitted through this app.
               You enter it directly in the portal browser window.
             </p>
@@ -200,9 +200,9 @@ export default function FilingPage() {
 
       {/* Progress Tracker */}
       {(isRunning || steps.length > 0) && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-lg mb-6">
+        <div className="bg-card rounded-xl border border-gray-200 p-6 max-w-lg mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Filing Progress</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Filing Progress</h3>
             {isRunning && (
               <button onClick={handleStop} className="text-xs text-red-600 hover:text-red-800">
                 Stop
@@ -221,7 +221,7 @@ export default function FilingPage() {
                     : "bg-gray-300"
                 }`} />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {STEP_LABELS[step.step] || step.step}
                   </p>
                   {step.detail && (
@@ -295,15 +295,15 @@ export default function FilingPage() {
       )}
 
       {/* How it works */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-lg">
-        <h3 className="font-semibold text-gray-900 mb-3">How it works</h3>
-        <ol className="space-y-2 text-sm text-gray-600">
-          <li className="flex gap-2"><span className="font-medium text-gray-900">1.</span> Opens a real browser window to incometax.gov.in</li>
-          <li className="flex gap-2"><span className="font-medium text-gray-900">2.</span> Enters your PAN, you enter password + OTP</li>
-          <li className="flex gap-2"><span className="font-medium text-gray-900">3.</span> Navigates to ITR filing and selects your form</li>
-          <li className="flex gap-2"><span className="font-medium text-gray-900">4.</span> Auto-fills income, deductions, and tax fields</li>
-          <li className="flex gap-2"><span className="font-medium text-gray-900">5.</span> You review everything before submission</li>
-          <li className="flex gap-2"><span className="font-medium text-gray-900">6.</span> You complete e-verification (Aadhaar OTP)</li>
+      <div className="bg-card rounded-xl border border-gray-200 p-6 max-w-lg">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">How it works</h3>
+        <ol className="space-y-2 text-sm text-gray-600 dark:text-gray-400 ">
+          <li className="flex gap-2"><span className="font-medium text-gray-900 dark:text-gray-100">1.</span> Opens a real browser window to incometax.gov.in</li>
+          <li className="flex gap-2"><span className="font-medium text-gray-900 dark:text-gray-100">2.</span> Enters your PAN, you enter password + OTP</li>
+          <li className="flex gap-2"><span className="font-medium text-gray-900 dark:text-gray-100">3.</span> Navigates to ITR filing and selects your form</li>
+          <li className="flex gap-2"><span className="font-medium text-gray-900 dark:text-gray-100">4.</span> Auto-fills income, deductions, and tax fields</li>
+          <li className="flex gap-2"><span className="font-medium text-gray-900 dark:text-gray-100">5.</span> You review everything before submission</li>
+          <li className="flex gap-2"><span className="font-medium text-gray-900 dark:text-gray-100">6.</span> You complete e-verification (Aadhaar OTP)</li>
         </ol>
       </div>
     </div>
