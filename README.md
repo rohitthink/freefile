@@ -5,10 +5,18 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/rohitthink/freefile/actions/workflows/ci.yml"><img src="https://github.com/rohitthink/freefile/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/rohitthink/freefile/releases/latest"><img src="https://img.shields.io/github/v/release/rohitthink/freefile?color=blue" alt="Latest release"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" alt="License"></a>
+  <a href="https://github.com/rohitthink/freefile/commits/main"><img src="https://img.shields.io/github/last-commit/rohitthink/freefile" alt="Last commit"></a>
+  <a href="https://github.com/rohitthink/freefile"><img src="https://img.shields.io/github/languages/code-size/rohitthink/freefile" alt="Code size"></a>
+</p>
+
+<p align="center">
   <a href="https://github.com/rohitthink/freefile/issues"><img src="https://img.shields.io/github/issues/rohitthink/freefile.svg" alt="Issues"></a>
   <a href="https://github.com/rohitthink/freefile/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
   <a href="https://github.com/rohitthink/freefile/stargazers"><img src="https://img.shields.io/github/stars/rohitthink/freefile.svg" alt="Stars"></a>
+  <a href="https://github.com/rohitthink/freefile/discussions"><img src="https://img.shields.io/github/discussions/rohitthink/freefile" alt="Discussions"></a>
 </p>
 
 <p align="center">
