@@ -26,10 +26,32 @@ logs/
 
 # Environment variants
 .env.*
+!.env.example
 
 # Signing keys
 *.keystore
 *.jks
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Database variants
+*.sqlite
+*.sqlite3
+
+# Common secret file names
+secrets.json
+credentials.json
+
+# SSH
+.ssh/
+
+# Security audit state
+.security/known_values.json
+.security/audit-report.json
+.security/audit-history/
+.oss-metrics-history.jsonl
 
 # OS
 .DS_Store

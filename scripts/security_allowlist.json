@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "description": "Explicit allowlist of security_audit.py findings that are known-intentional. Each entry must have a reason.",
+  "exposures": [
+    {
+      "file_glob": "frontend/**/*.tsx",
+      "rule": "pan_india",
+      "value_equals": "ABCDE1234F",
+      "reason": "Placeholder PAN used as format example in UI components"
+    },
+    {
+      "file_glob": "frontend/**/*.ts",
+      "rule": "pan_india",
+      "value_equals": "ABCDE1234F",
+      "reason": "Placeholder PAN used as format example"
+    },
+    {
+      "file_glob": "tests/**/*.py",
+      "rule": "pan_india",
+      "value_equals": "ABCDE1234F",
+      "reason": "Placeholder PAN used in test fixtures"
+    },
+    {
+      "file_glob": "tests/**/*.py",
+      "rule": "india_mobile",
+      "value_equals": "9876543210",
+      "reason": "Placeholder mobile number used in test fixtures"
+    },
+    {
+      "file": "docs/launch/claude-for-oss-application.md",
+      "rule": "known_value_full_name",
+      "reason": "Maintainer name intentionally included in OSS grant application"
+    },
+    {
+      "file": "docs/launch/claude-for-oss-application.md",
+      "rule": "known_value_emails",
+      "reason": "Maintainer email intentionally included in OSS grant application"
+    },
+    {
+      "file": "docs/launch/oss-strengthening-playbook.md",
+      "rule": "known_value_emails",
+      "reason": "Email reference in internal strategy doc (already public via application)"
+    },
+    {
+      "file_glob": ".security/known_values.json.example",
+      "rule": "pan_india",
+      "value_equals": "ABCDE1234F",
+      "reason": "Placeholder PAN in allowlist template"
+    }
+  ],
+  "history_exposures": [
+    {
+      "rule": "history_known_value_full_name",
+      "reason": "Maintainer name was intentionally committed in OSS application docs (commit 927da20)"
+    },
+    {
+      "rule": "history_known_value_emails",
+      "reason": "Maintainer email was intentionally committed in OSS application docs (commit 927da20)"
+    }
+  ]
+}

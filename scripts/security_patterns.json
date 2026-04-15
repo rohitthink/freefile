@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "description": "Regex patterns for security_audit.py. Severities: CRITICAL, HIGH, MEDIUM, LOW, INFO.",
+  "patterns": [
+    {
+      "name": "aws_access_key",
+      "severity": "CRITICAL",
+      "regex": "\\bAKIA[0-9A-Z]{16}\\b",
+      "message": "AWS access key ID",
+      "remediation": "Rotate the key in AWS IAM immediately, then remove from file and rewrite git history with git filter-repo."
+    },
+    {
+      "name": "aws_secret_key_assignment",
+      "severity": "CRITICAL",
+      "regex": "(?i)aws(.{0,20})?(secret|private).{0,3}[=:]\\s*['\"][A-Za-z0-9/+=]{40}['\"]",
+      "message": "AWS secret access key assignment",
+      "remediation": "Rotate the AWS secret in IAM immediately; move to env var or AWS Secrets Manager."
+    },
+    {
+      "name": "github_token_classic",
+      "severity": "CRITICAL",
+      "regex": "\\bgh[pousr]_[A-Za-z0-9]{36,}\\b",
+      "message": "GitHub personal access token (classic)",
+      "remediation": "Revoke at https://github.com/settings/tokens; remove from file; rewrite history."
+    },
+    {
+      "name": "github_fine_pat",
+      "severity": "CRITICAL",
+      "regex": "\\bgithub_pat_[A-Za-z0-9_]{82}\\b",
+      "message": "GitHub fine-grained personal access token",
+      "remediation": "Revoke at https://github.com/settings/tokens; remove from file; rewrite history."
+    },
+    {
+      "name": "openai_key",
+      "severity": "CRITICAL",
+      "regex": "\\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\\b",
+      "message": "OpenAI API key",
+      "remediation": "Revoke at https://platform.openai.com/api-keys; remove from file; rewrite history."
+    },
+    {
+      "name": "anthropic_key",
+      "severity": "CRITICAL",
+      "regex": "\\bsk-ant-[A-Za-z0-9_-]{20,}\\b",
+      "message": "Anthropic API key",
+      "remediation": "Revoke at https://console.anthropic.com/settings/keys; remove from file; rewrite history."
+    },
+    {
+      "name": "slack_token",
+      "severity": "CRITICAL",
+      "regex": "\\bxox[baprs]-[A-Za-z0-9-]{10,}\\b",
+      "message": "Slack API token",
+      "remediation": "Revoke in Slack admin; remove from file; rewrite history."
+    },
+    {
+      "name": "stripe_live_secret",
+      "severity": "CRITICAL",
+      "regex": "\\bsk_live_[0-9a-zA-Z]{24,}\\b",
+      "message": "Stripe live secret key",
+      "remediation": "Roll the key in Stripe Dashboard; remove from file; rewrite history."
+    },
+    {
+      "name": "private_key_header",
+      "severity": "CRITICAL",
+      "regex": "-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----",
+      "message": "PEM private key header",
+      "remediation": "Delete the key file; generate a new keypair; revoke the old public key everywhere it was trusted."
+    },
+    {
+      "name": "pan_india",
+      "severity": "HIGH",
+      "regex": "\\b[A-Z]{5}[0-9]{4}[A-Z]\\b",
+      "placeholder_values": ["ABCDE1234F", "AAAAA0000A", "XXXXX0000X", "ZZZZZ9999Z"],
+      "message": "Indian PAN number format",
+      "remediation": "Remove from file. If in git history, rewrite with git filter-repo --replace-text."
+    },
+    {
+      "name": "aadhaar_india",
+      "severity": "HIGH",
+      "regex": "\\b[2-9]\\d{3}\\s?\\d{4}\\s?\\d{4}\\b",
+      "message": "Indian Aadhaar number format",
+      "remediation": "Remove from file immediately; rewrite git history. Aadhaar disclosure can trigger legal liability under Section 29 of the Aadhaar Act."
+    },
+    {
+      "name": "gstin_india",
+      "severity": "HIGH",
+      "regex": "\\b\\d{2}[A-Z]{5}\\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]\\b",
+      "message": "Indian GSTIN format",
+      "remediation": "Remove from file; GSTIN is indirect PAN disclosure (characters 3-12)."
+    },
+    {
+      "name": "google_api_key",
+      "severity": "HIGH",
+      "regex": "\\bAIza[0-9A-Za-z_-]{35}\\b",
+      "message": "Google API key",
+      "remediation": "Restrict or revoke at https://console.cloud.google.com/apis/credentials."
+    },
+    {
+      "name": "ifsc_code",
+      "severity": "MEDIUM",
+      "regex": "\\b[A-Z]{4}0[A-Z0-9]{6}\\b",
+      "message": "Indian bank IFSC code",
+      "remediation": "IFSC alone is low-risk but if paired with account number suggests bank details exposure. Review context."
+    },
+    {
+      "name": "jwt_token",
+      "severity": "MEDIUM",
+      "regex": "\\beyJ[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}\\b",
+      "message": "JWT token",
+      "remediation": "Treat as a bearer credential; rotate if valid; verify the signing secret isn't in the same file."
+    },
+    {
+      "name": "generic_secret_assignment",
+      "severity": "MEDIUM",
+      "regex": "(?i)(api[_-]?key|secret|password|passwd|token)\\s*[:=]\\s*['\"][^'\"\\s]{12,}['\"]",
+      "message": "Generic secret assignment",
+      "remediation": "Move the value to an environment variable or secret manager. Use a placeholder like YOUR_API_KEY in committed code.",
+      "allowlist_context": ["test", "example", "placeholder", "dummy", "xxx", "your_", "fake", "sample", "foo", "bar"]
+    },
+    {
+      "name": "india_mobile",
+      "severity": "LOW",
+      "regex": "\\b(?:\\+?91[-\\s]?)?[6-9]\\d{9}\\b",
+      "placeholder_values": ["9876543210", "9999999999", "8888888888", "7777777777"],
+      "message": "Indian mobile number",
+      "remediation": "Review context — may be user PII. Replace with a placeholder if this is real."
+    }
+  ]
+}
