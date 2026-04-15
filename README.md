@@ -37,7 +37,35 @@ FreeFile ITR helps Indian freelancers, consultants, and independent professional
 
 ## Screenshots
 
-More screenshots coming soon — the app's main screens contain personal financial data which we're excluding from the repo for privacy reasons. Run `make dev` to see the full app in action.
+### Dashboard
+<img src="docs/images/dashboard.png" alt="FreeFile Dashboard" width="800">
+
+Real-time overview of your income, expenses, tax liability, and effective rate. Switch-regime suggestion shows how much you'd save.
+
+### Tax Computation
+<img src="docs/images/tax.png" alt="Old vs New Regime Comparison" width="800">
+
+Side-by-side comparison of old and new tax regimes with automatic recommendation. Handles ITR-3 and ITR-4 (44ADA presumptive) with all deductions, surcharge, cess, and TDS credit.
+
+### Transactions
+<img src="docs/images/transactions.png" alt="Transactions List" width="800">
+
+Auto-categorized transactions imported from bank statements. Filter by type and category, search by narration, confirm AI-suggested categories.
+
+### Filing Automation
+<img src="docs/images/filing.png" alt="ITR Filing" width="800">
+
+One-click browser-based filing on the official incometax.gov.in portal. Your credentials never touch FreeFile — you enter them directly in the portal window.
+
+### Capital Gains
+<img src="docs/images/capital-gains.png" alt="Capital Gains Tracking" width="800">
+
+Track short-term and long-term capital gains from Zerodha, Groww, and IndMoney statements with grandfathering and indexation support.
+
+### Upload & Settings
+<img src="docs/images/upload.png" alt="Upload Bank Statements" width="400"> <img src="docs/images/settings.png" alt="Settings" width="400">
+
+> All screenshots show synthetic demo data. Your real data stays on your device.
 
 ## Quick Start
 

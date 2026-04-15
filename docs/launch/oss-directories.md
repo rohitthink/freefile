@@ -95,11 +95,51 @@ Thanks for considering!
 
 ## Tracking
 
-| Directory | Status | PR Link | Notes |
-|-----------|--------|---------|-------|
-| awesome-selfhosted | BLOCKED | - | Interactions restricted to collaborators. Must submit via GitLab mirror: https://gitlab.com/awesome-selfhosted/awesome-selfhosted |
-| awesome-privacy | PR OPEN | https://github.com/Lissy93/awesome-privacy/pull/500 | Added to Finance → Budgeting section |
-| awesome-local-first | PR OPEN | https://github.com/zhongkechen/awesome-local-first/pull/2 | Created new Finance category |
-| awesome-india | Not submitted | - | Identify specific awesome-india repo with active maintainer |
-| awesome-foss-apps | Not submitted | - | - |
-| AlternativeTo | Not submitted | - | Submit manually at alternativeto.net — add as alternative to ClearTax, Quicko |
+| # | Directory | Status | PR Link | Notes |
+|---|-----------|--------|---------|-------|
+| 1 | Lissy93/awesome-privacy | PR OPEN | https://github.com/Lissy93/awesome-privacy/pull/500 | Added to Finance → Budgeting (YAML format) |
+| 2 | zhongkechen/awesome-local-first | PR OPEN | https://github.com/zhongkechen/awesome-local-first/pull/2 | Created new Finance category |
+| 3 | tauri-apps/awesome-tauri | PR OPEN | https://github.com/tauri-apps/awesome-tauri/pull/663 | Added to Finance section |
+| 4 | mjhea0/awesome-fastapi | PR OPEN | https://github.com/mjhea0/awesome-fastapi/pull/281 | Added to Open Source Projects |
+| 5 | pluja/awesome-privacy | PR OPEN | https://github.com/pluja/awesome-privacy/pull/766 | Created new Tax Filing subsection |
+| 6 | awesome-selfhosted (GitLab) | NEEDS USER ACTION | - | Branch ready at github.com/rohitthink/awesome-selfhosted/tree/add-freefile-itr — submit manually via GitLab MR after creating GitLab account |
+| 7 | awesome-india | Not submitted | - | Identify specific awesome-india repo with active maintainer |
+| 8 | AlternativeTo | Not submitted | - | Submit manually at alternativeto.net — add as alternative to ClearTax, Quicko |
+
+## PR Monitoring
+
+A daily scheduled task (`freefile-pr-monitor`) runs at 9:37 AM local time to check for new comments, reviews, or status changes on all 5 open PRs. The task is configured via Claude Code's scheduled-tasks system and reports back when there is activity that needs a response.
+
+## Manual: Submit to awesome-selfhosted via GitLab
+
+The upstream awesome-selfhosted is on GitLab (gitlab.com/awesome-selfhosted/awesome-selfhosted-data). The GitHub mirror at awesome-selfhosted/awesome-selfhosted has interactions restricted to collaborators only.
+
+To submit manually:
+1. Create a GitLab account (or sign in if you have one)
+2. Fork https://gitlab.com/awesome-selfhosted/awesome-selfhosted-data
+3. Their data is in YAML format under `software/freefile-itr.yml`
+4. Use this template:
+
+```yaml
+name: FreeFile ITR
+website_url: https://github.com/rohitthink/freefile
+source_code_url: https://github.com/rohitthink/freefile
+description: |
+  Free, privacy-first income tax return filing app for Indian freelancers.
+  Imports bank statements from major Indian banks (HDFC, SBI, ICICI, Axis,
+  Kotak), auto-categorizes transactions, computes tax under both old and
+  new regimes, supports ITR-3 and ITR-4 (44ADA presumptive), and files
+  directly on the official incometax.gov.in portal via browser automation.
+  All financial data stored locally in SQLite — no telemetry, no accounts.
+licenses:
+  - AGPL-3.0
+platforms:
+  - Python
+  - Nodejs
+  - Docker
+tags:
+  - money-budgeting-and-management
+```
+
+5. Open MR against the master branch
+6. The CI will validate the entry format automatically
