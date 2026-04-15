@@ -49,19 +49,31 @@ The app is actively maintained and has infrastructure for community contribution
 
 ## Community & Maintenance
 
-**Active Contributors:** Currently solo (project just open sourced) but infrastructure is set up for contributors.
+**Active Contributors:** Currently solo maintainer (project open-sourced April 2026). Community infrastructure is fully built out and ready to scale.
 
 **Community Setup:**
-- [CONTRIBUTING.md](https://github.com/rohitthink/freefile/blob/main/CONTRIBUTING.md) — Full contributor guide
+- [CONTRIBUTING.md](https://github.com/rohitthink/freefile/blob/main/CONTRIBUTING.md) — Full contributor guide including "how to add a bank parser" walkthrough
 - [CODE_OF_CONDUCT.md](https://github.com/rohitthink/freefile/blob/main/CODE_OF_CONDUCT.md) — Contributor Covenant v2.1
 - [SECURITY.md](https://github.com/rohitthink/freefile/blob/main/SECURITY.md) — Responsible disclosure policy
 - Issue templates for bug reports and feature requests
-- PR template with checklist
-- GitHub Actions CI (py_compile, tsc, pytest)
+- PR template with checklist (py_compile, tsc, tests)
+- GitHub Actions CI matrix (Python 3.12/3.13 + Node 20)
 - 5 labeled `good first issue` tickets to attract contributors
 - `v1.0 Community Release` milestone on GitHub
+- Public roadmap at https://github.com/users/rohitthink/projects/1
+- GitHub Discussions enabled for community Q&A
+- Full README with 7 product screenshots
 
-**Commit History:** 12+ commits, actively maintained
+**Commit History:** 13+ commits, actively maintained
+
+**Active Outreach — 5 open PRs to major awesome-X lists:**
+- [Lissy93/awesome-privacy #500](https://github.com/Lissy93/awesome-privacy/pull/500)
+- [zhongkechen/awesome-local-first #2](https://github.com/zhongkechen/awesome-local-first/pull/2)
+- [tauri-apps/awesome-tauri #663](https://github.com/tauri-apps/awesome-tauri/pull/663)
+- [mjhea0/awesome-fastapi #281](https://github.com/mjhea0/awesome-fastapi/pull/281)
+- [pluja/awesome-privacy #766](https://github.com/pluja/awesome-privacy/pull/766)
+
+**Launch plan prepared:** Full launch kit ready at [docs/launch/](https://github.com/rohitthink/freefile/tree/main/docs/launch) for Reddit (r/india, r/opensource), Hacker News (Show HN), Twitter thread, IndieHackers, Product Hunt.
 
 ## Why This Matters
 
@@ -88,10 +100,12 @@ Access to Claude via the OSS program would directly accelerate development of ne
 
 ## Maintainer Info
 
-**Name:** Rohit
+**Name:** Rohit Ganguly
 **GitHub:** https://github.com/rohitthink
-**Email:** [your email]
+**Email:** welcome2ithink@gmail.com
 **Location:** India
+
+**Existing Claude usage:** Max plan subscriber, use Claude Code daily for FreeFile development. Would upgrade to OSS tier to support more aggressive bank parser development and community PR review.
 
 ## Relevant Links
 
