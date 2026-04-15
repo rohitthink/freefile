@@ -34,3 +34,4 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+.oss-metrics-history.jsonl
