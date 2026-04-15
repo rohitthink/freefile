@@ -31,6 +31,19 @@ FreeFile ITR helps Indian freelancers, consultants, and independent professional
 | Desktop App | Native desktop via Tauri (macOS, Windows, Linux) |
 | Mobile App | Android and iOS via Capacitor |
 
+## Screenshots
+
+> Coming soon. Run `make dev` to see the app in action.
+
+<!--
+Add screenshots here:
+- Dashboard with tax summary and charts
+- Bank statement upload flow
+- Transaction list with categorization
+- Old vs new regime comparison
+- Filing automation in action
+-->
+
 ## Quick Start
 
 ```bash
