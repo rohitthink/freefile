@@ -65,9 +65,11 @@ export default function SettingsPage() {
     regime: "new",
     itr_form: "ITR-4",
   });
+ 
   const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE);
   const [savedFY, setSavedFY] = useState(false);
   const [savedProfile, setSavedProfile] = useState(false);
+  const [isDark, setDarkMode] = useState(false);
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [touched, setTouched] = useState<
     Partial<Record<keyof Profile, boolean>>
@@ -77,6 +79,19 @@ export default function SettingsPage() {
   const { setUserName, setRegime, setItrForm } = useAppStore();
 
   useEffect(() => {
+
+
+  if (localStorage.getItem("theme") === "dark") {
+    setDarkMode(true);
+    document.documentElement.classList.add("dark");
+  } else if (localStorage.getItem("theme") === "light") {
+ 
+    setDarkMode(false);
+    document.documentElement.classList.remove("dark");
+  } else {
+    const ColorsystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    ColorsystemDark ? setDarkMode(true) : setDarkMode(false);
+  }
     getFYSettings("2025-26")
       .then((s) => setSettings(s as FYSettings))
       .catch(() => setLoadError("Could not load FY settings. Is the backend running?"));
@@ -123,6 +138,17 @@ export default function SettingsPage() {
     }
   };
 
+  const switchTheme = () => {
+  const Theme = !isDark;
+
+  setDarkMode(Theme);
+
+  localStorage.setItem("theme", Theme ? "dark" : "light");
+
+  document.documentElement.classList.toggle("dark", Theme);
+  console.log("HTML classes:", document.documentElement.className);
+};
+
   const handleSaveProfile = async () => {
     // Mark all fields as touched
     const allTouched: Partial<Record<keyof Profile, boolean>> = {};
@@ -152,12 +178,13 @@ export default function SettingsPage() {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 tracking-tight">
-        Settings
-      </h2>
-      <p className="text-slate-500 text-sm mb-8">
-        Manage your profile, tax regime, and ITR form preferences.
-      </p>
+    <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+      Settings
+    </h2>
+
+    <p className="text-slate-500  text-sm mb-8">
+      Manage your profile, tax regime, and ITR form preferences.
+    </p>
 
       {loadError && (
         <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-2 max-w-4xl">
@@ -178,9 +205,9 @@ export default function SettingsPage() {
         <div className="glass-card rounded-2xl p-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-              <User className="w-5 h-5 text-blue-600" />
+              <User className="w-5 h-5 text-blue-800" />
             </div>
-            <h3 className="font-semibold text-slate-900">Your Profile</h3>
+            <h3 className="font-semibold text-foreground">Your Profile</h3>
           </div>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -276,7 +303,7 @@ export default function SettingsPage() {
                 onChange={(e) =>
                   setProfile({ ...profile, profession: e.target.value })
                 }
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2.5 bg-card border border-slate-200 rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="freelancer">
                   Freelancer / Independent Contractor
@@ -311,7 +338,7 @@ export default function SettingsPage() {
         {/* FY Settings */}
         <div className="space-y-6">
           <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-slate-900 mb-5">
+            <h3 className="font-semibold text-foreground mb-5">
               Financial Year
             </h3>
             <div className="space-y-4">
@@ -324,7 +351,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setSettings({ ...settings, fy: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 bg-card border border-slate-200 rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="2025-26">FY 2025-26 (AY 2026-27)</option>
                   <option value="2024-25">FY 2024-25 (AY 2025-26)</option>
@@ -344,11 +371,11 @@ export default function SettingsPage() {
                       }
                       className={`p-4 rounded-2xl border text-left transition-all ${
                         settings.regime === r
-                          ? "border-blue-500 bg-blue-50/50 shadow-sm"
-                          : "border-slate-200 hover:border-slate-300"
+                            ? "border-[var(--accent)] bg-[var(--accent-soft)]"
+                            : "border-[var(--border)]"
                       }`}
                     >
-                      <p className="font-medium text-sm text-slate-900">
+                      <p className="font-medium text-sm text-foreground">
                         {r === "new" ? "New" : "Old"} Regime
                       </p>
                       <p className="text-xs text-slate-500 mt-1">
@@ -382,11 +409,11 @@ export default function SettingsPage() {
                       }
                       className={`p-4 rounded-2xl border text-left transition-all ${
                         settings.itr_form === form
-                          ? "border-blue-500 bg-blue-50/50 shadow-sm"
-                          : "border-slate-200 hover:border-slate-300"
+                            ? "border-[var(--accent)] bg-[var(--accent-soft)]"
+                            : "border-[var(--border)]"
                       }`}
                     >
-                      <p className="font-medium text-sm text-slate-900">
+                      <p className="font-medium text-sm text-foreground">
                         {form}
                       </p>
                       <p className="text-xs text-slate-500 mt-1">{desc}</p>
@@ -411,17 +438,45 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-slate-900 mb-2">
+       <div className="glass-card rounded-2xl p-6">
+  <h3 className="font-semibold text-foreground mb-2">
+    Theme
+  </h3>
+
+  <div className="flex items-center justify-between">
+    <span className="text-sm text-slate-600 dark:text-slate-200">
+      {isDark ? "Dark Mode" : "Light Mode"}
+    </span>
+
+    <button
+      onClick={switchTheme}
+      className={`w-14 h-8 flex items-center rounded-full p-1 transition-colors ${
+        isDark ? "bg-slate-600" : "bg-slate-300"
+      }`}
+    >
+      <div
+        className={`w-6 h-6 bg-white rounded-full shadow transform transition-transform ${
+          isDark ? "translate-x-6" : "translate-x-0"
+        }`}
+      />
+    </button>
+  </div>
+</div>
+
+          
+            <div className="glass-card rounded-2xl p-6">
+            <h3 className="font-semibold text-foreground  mb-2">
               About FreeFile
             </h3>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-200">
               Local-first ITR filing app for Indian freelancers.
             </p>
-            <p className="text-xs text-slate-400 mt-2">
+            <p className="text-xs text-slate-400  mt-2">
               All data stored locally. Nothing sent to any server.
             </p>
           </div>
+
+          
         </div>
       </div>
     </div>
@@ -458,7 +513,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}
         onBlur={onBlur}
-        className={`w-full px-4 py-2.5 bg-white border rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+        className={`w-full px-4 py-2.5 bg-card border rounded-xl text-sm text-foreground placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
           mono ? "font-mono tracking-wider uppercase" : ""
         } ${error ? "border-red-400" : "border-slate-200"}`}
       />

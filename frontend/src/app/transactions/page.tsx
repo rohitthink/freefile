@@ -84,7 +84,7 @@ export default function TransactionsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Transactions</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-200">Transactions</h2>
         <span className="text-sm text-gray-500">{total} transactions</span>
       </div>
 
@@ -93,7 +93,7 @@ export default function TransactionsPage() {
         <select
           value={filter.tx_type}
           onChange={(e) => setFilter({ ...filter, tx_type: e.target.value })}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-card"
         >
           <option value="">All Types</option>
           <option value="credit">Credits (Income)</option>
@@ -102,7 +102,7 @@ export default function TransactionsPage() {
         <select
           value={filter.category}
           onChange={(e) => setFilter({ ...filter, category: e.target.value })}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"
+          className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-card"
         >
           <option value="">All Categories</option>
           {Object.entries(CATEGORIES).map(([key, label]) => (
@@ -131,7 +131,7 @@ export default function TransactionsPage() {
           <select
             value={bulkCategory}
             onChange={(e) => setBulkCategory(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-card"
           >
             <option value="">Select category...</option>
             {Object.entries(CATEGORIES).map(([key, label]) => (
@@ -157,7 +157,7 @@ export default function TransactionsPage() {
       <p className="text-xs text-gray-400 mb-4">Tip: Confirmed categories (green) create auto-categorization rules for future imports.</p>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl border border-gray-200 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center h-32">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900" />
@@ -204,7 +204,7 @@ export default function TransactionsPage() {
                         onChange={(e) => handleCategoryChange(tx.id, e.target.value)}
                         onBlur={() => setEditingId(null)}
                         autoFocus
-                        className="px-2 py-1 border border-gray-300 rounded text-xs bg-white"
+                        className="px-2 py-1 border border-gray-300 rounded text-xs bg-card"
                       >
                         {Object.entries(CATEGORIES).map(([key, label]) => (
                           <option key={key} value={key}>{label}</option>

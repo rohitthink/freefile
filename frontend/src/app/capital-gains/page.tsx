@@ -56,7 +56,7 @@ export default function CapitalGainsPage() {
   if (error || !data) {
     return (
       <div className="animate-fade-in">
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2 tracking-tight">
           Capital Gains
         </h2>
         <p className="text-slate-500 text-sm mb-8">
@@ -66,7 +66,7 @@ export default function CapitalGainsPage() {
           <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center">
             <Upload className="w-7 h-7 text-white" />
           </div>
-          <h3 className="text-xl font-semibold text-slate-900">
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
             No capital gains data
           </h3>
           <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto">
@@ -137,7 +137,7 @@ export default function CapitalGainsPage() {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 tracking-tight">
+      <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2 tracking-tight">
         Capital Gains
       </h2>
       <p className="text-slate-500 text-sm mb-8">
@@ -153,7 +153,7 @@ export default function CapitalGainsPage() {
           >
             <p className="text-xs font-medium text-slate-500">{card.label}</p>
             <p
-              className={`text-lg font-bold mt-1 ${card.value >= 0 ? "text-slate-900" : "text-red-600"}`}
+              className={`text-lg font-bold mt-1 ${card.value >= 0 ? "text-slate-900 dark:text-slate-100" : "text-red-600"}`}
             >
               {formatCurrency(card.value)}
             </p>
@@ -172,7 +172,7 @@ export default function CapitalGainsPage() {
             <TrendingUp className="w-5 h-5 text-emerald-600" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900">
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
               Dividend Income: {formatCurrency(data.dividends)}
             </p>
             <p className="text-xs text-slate-500">
@@ -186,7 +186,7 @@ export default function CapitalGainsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {Object.keys(data.loss_setoff).length > 0 && (
           <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-amber-500" />
               Loss Set-off
             </h3>
@@ -210,7 +210,7 @@ export default function CapitalGainsPage() {
 
         {Object.keys(data.carry_forward).length > 0 && (
           <div className="glass-card rounded-2xl p-6">
-            <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
               <TrendingDown className="w-4 h-4 text-blue-500" />
               Carry-Forward Losses
             </h3>
@@ -223,7 +223,7 @@ export default function CapitalGainsPage() {
                   <span className="text-sm text-slate-600 capitalize">
                     {key.replace(/_/g, " ")}
                   </span>
-                  <span className="text-sm font-medium text-slate-900">
+                  <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
                     {formatCurrency(value)}
                   </span>
                 </div>
@@ -237,7 +237,7 @@ export default function CapitalGainsPage() {
       {sortedTrades.length > 0 && (
         <div className="glass-card rounded-2xl overflow-hidden">
           <div className="p-6 pb-3">
-            <h3 className="font-semibold text-slate-900">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">
               Individual Trades ({sortedTrades.length})
             </h3>
           </div>
@@ -298,7 +298,7 @@ export default function CapitalGainsPage() {
                     key={i}
                     className="border-b border-slate-50 hover:bg-blue-50/50 transition-colors"
                   >
-                    <td className="px-6 py-3 font-medium text-slate-900">
+                    <td className="px-6 py-3 font-medium text-slate-900 dark:text-slate-100">
                       {trade.symbol}
                     </td>
                     <td className="px-4 py-3">

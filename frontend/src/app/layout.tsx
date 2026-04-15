@@ -28,14 +28,36 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
+        <script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function () {
+        try {
+          const theme = localStorage.getItem('theme');
+          const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+          const isDark =
+            theme === 'dark' || (!theme && systemDark);
+
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    `,
+  }}
+/>
       </head>
-      <body className="min-h-full bg-[#f0f4ff]">
+<body className="min-h-full bg-[#f0f4ff] text-slate-900 dark:bg-black dark:text-white">
         <ToastProvider>
           <AppShell>{children}</AppShell>
         </ToastProvider>
