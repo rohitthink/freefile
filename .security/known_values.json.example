@@ -1,0 +1,11 @@
+{
+  "_comment": "Fill in your real personal values here, then save this file as .security/known_values.json. That file is gitignored and the scanner will use it for literal-match checks across committed files and git history. Delete the _comment field.",
+  "pan": "ABCDE1234F",
+  "aadhaar_last4": "1234",
+  "emails": ["you@example.com"],
+  "phones": ["+91XXXXXXXXXX"],
+  "full_name": "Your Name",
+  "dob": "YYYY-MM-DD",
+  "bank_ifsc": ["ABCD0123456"],
+  "gstin": []
+}
