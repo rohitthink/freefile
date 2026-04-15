@@ -11,6 +11,10 @@
   <a href="https://github.com/rohitthink/freefile/stargazers"><img src="https://img.shields.io/github/stars/rohitthink/freefile.svg" alt="Stars"></a>
 </p>
 
+<p align="center">
+  <img src="docs/images/hero.png" alt="FreeFile ITR — Tax filing made effortless" width="800">
+</p>
+
 ---
 
 FreeFile ITR helps Indian freelancers, consultants, and independent professionals compute and file their income tax returns — completely free, with all data stored locally on your device.
@@ -33,16 +37,7 @@ FreeFile ITR helps Indian freelancers, consultants, and independent professional
 
 ## Screenshots
 
-> Coming soon. Run `make dev` to see the app in action.
-
-<!--
-Add screenshots here:
-- Dashboard with tax summary and charts
-- Bank statement upload flow
-- Transaction list with categorization
-- Old vs new regime comparison
-- Filing automation in action
--->
+More screenshots coming soon — the app's main screens contain personal financial data which we're excluding from the repo for privacy reasons. Run `make dev` to see the full app in action.
 
 ## Quick Start
 

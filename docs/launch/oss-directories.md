@@ -97,9 +97,9 @@ Thanks for considering!
 
 | Directory | Status | PR Link | Notes |
 |-----------|--------|---------|-------|
-| awesome-selfhosted | Not submitted | - | - |
-| awesome-privacy | Not submitted | - | - |
-| awesome-india | Not submitted | - | - |
-| awesome-local-first | Not submitted | - | - |
+| awesome-selfhosted | BLOCKED | - | Interactions restricted to collaborators. Must submit via GitLab mirror: https://gitlab.com/awesome-selfhosted/awesome-selfhosted |
+| awesome-privacy | PR OPEN | https://github.com/Lissy93/awesome-privacy/pull/500 | Added to Finance → Budgeting section |
+| awesome-local-first | PR OPEN | https://github.com/zhongkechen/awesome-local-first/pull/2 | Created new Finance category |
+| awesome-india | Not submitted | - | Identify specific awesome-india repo with active maintainer |
 | awesome-foss-apps | Not submitted | - | - |
-| AlternativeTo | Not submitted | - | - |
+| AlternativeTo | Not submitted | - | Submit manually at alternativeto.net — add as alternative to ClearTax, Quicko |
